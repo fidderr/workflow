@@ -40,6 +40,7 @@ specs/
    ```bash
    ./orchestrator/update-status.sh ready-for-qa kiro "Round 1 complete. Handoff: specs/handoffs/HANDOFF-R1-project-name.md" 1
    ```
+   IMPORTANT: Always use `./orchestrator/update-status.sh` to update status — never edit STATUS.json directly. Valid phases: `ready-for-kiro`, `ready-for-qa`, `done`.
 
 ### Fix Round (STATUS = ready-for-kiro, round 2+)
 1. Read `specs/STATUS.json` for the QA report reference
@@ -52,7 +53,11 @@ specs/
    - **Enhancements (ENH-xx)** — implement freely, no approval needed
 4. Re-run all tests
 5. Create new handoff (increment round number)
-6. Update STATUS.json to `ready-for-qa`
+6. Update STATUS.json to `ready-for-qa`:
+   ```bash
+   ./orchestrator/update-status.sh ready-for-qa kiro "Round N complete. Handoff: specs/handoffs/HANDOFF-RN-project-name.md" N
+   ```
+   IMPORTANT: Always use `./orchestrator/update-status.sh` — never edit STATUS.json directly.
 
 ### If You Have Questions
 1. Create a question using `specs/templates/KIRO_QUESTION_TEMPLATE.md`

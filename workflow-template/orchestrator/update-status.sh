@@ -26,7 +26,7 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 STATUS_FILE="$PROJECT_ROOT/specs/STATUS.json"
 
 # Validate
-VALID_PHASES="idle ready-for-kiro implementation ready-for-qa qa done"
+VALID_PHASES="idle ready-for-kiro ready-for-qa done"
 VALID_AGENTS="admin kiro openclaw orchestrator"
 
 if [ -z "$PHASE" ] || [ -z "$AGENT" ] || [ -z "$MESSAGE" ]; then

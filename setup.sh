@@ -110,13 +110,22 @@ fi
 
 echo "  openclaw: $(openclaw --version 2>/dev/null || echo 'installed')"
 
-# Run the normal OpenClaw setup if not configured yet
+# Run the interactive onboarding wizard if not configured yet
 if [ ! -f "$HOME/.openclaw/openclaw.json" ]; then
     echo ""
-    echo "  Running OpenClaw's setup wizard..."
-    echo "  Follow the prompts to configure your model provider and API key."
+    echo "  Running OpenClaw's onboarding wizard..."
+    echo "  Follow the prompts to configure your model provider, API key, and gateway."
     echo ""
-    openclaw setup
+    openclaw onboard
+else
+    echo "  Config already exists at ~/.openclaw/openclaw.json"
+fi
+
+# Make sure gateway is running
+if ! openclaw gateway status &> /dev/null; then
+    echo "  Starting gateway..."
+    openclaw gateway run &
+    sleep 3
 fi
 
 echo ""
@@ -230,7 +239,7 @@ echo "  Done."
 echo ""
 
 # ----------------------------------------------------------
-# Summary
+# Summary + Auto-start
 # ----------------------------------------------------------
 echo "============================================"
 echo "  Setup Complete"
@@ -241,8 +250,23 @@ echo "  Workspace:      $WORKSPACE_DIR"
 echo "  Credentials:    $ENV_FILE"
 echo "  Projects dir:   $HOME/projects"
 echo ""
-echo "  Next steps:"
-echo "    1. Open the agent in OpenClaw TUI:"
-echo "       openclaw tui --session $AGENT_NAME"
-echo "    2. Give it your idea or spec — it handles the rest"
+
+# Start the gateway service
+echo "Starting gateway..."
+systemctl --user start openclaw-gateway.service 2>/dev/null || true
+systemctl --user enable openclaw-gateway.service 2>/dev/null || true
+sleep 2
+
+# Send initial message to verify the agent works
+echo "Running: openclaw agent --agent $AGENT_NAME --message \"Read your SOUL.md instructions and explain them in short. Also mention what model you are using.\""
+openclaw agent --agent "$AGENT_NAME" --message "Read your SOUL.md instructions and explain them in short. Also mention what model you are using." 2>/dev/null || true
+
+# Open dashboard
+echo ""
+echo "Running: openclaw dashboard"
+openclaw dashboard 2>/dev/null || true
+
+echo ""
+echo "  Your agent '$AGENT_NAME' is ready."
+echo "  Open the dashboard chat to give it your project spec."
 echo ""

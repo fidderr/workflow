@@ -21,6 +21,7 @@ KIRO_COMMAND="kiro-cli"
 KIRO_MESSAGE="A new task is ready. Read specs/STATUS.json in project '$PROJECT_NAME' at '$PROJECT_ROOT'. Fix all blockers first, then bugs, then visual issues. When done, update STATUS.json and create a handoff."
 
 OPENCLAW_COMMAND="openclaw"
+OPENCLAW_AGENT="${OPENCLAW_AGENT:-$PROJECT_NAME}" # Defaults to project name (matches agent name from setup.sh)
 OPENCLAW_MESSAGE="Kiro finished implementation for project '$PROJECT_NAME' at '$PROJECT_ROOT'. Read the handoff, set up a dev build, test everything, create a QA report, and update STATUS.json."
 
 # ------------------------------------------------------------
@@ -46,7 +47,7 @@ get_phase() {
 trigger_kiro() {
     log "Triggering Kiro..."
     if command -v "$KIRO_COMMAND" &> /dev/null; then
-        $KIRO_COMMAND chat --trust-all-tools "$KIRO_MESSAGE" --cwd "$PROJECT_ROOT" 2>&1 | while read -r line; do
+        (cd "$PROJECT_ROOT" && $KIRO_COMMAND chat --no-interactive --trust-all-tools "$KIRO_MESSAGE") 2>&1 | while read -r line; do
             log "[kiro] $line"
         done
         log "Kiro process completed."
@@ -57,8 +58,12 @@ trigger_kiro() {
 
 trigger_openclaw() {
     log "Triggering OpenClaw..."
+    if [ -z "$OPENCLAW_AGENT" ]; then
+        log "ERROR: OPENCLAW_AGENT not set. Edit watcher.sh and set OPENCLAW_AGENT to your agent name."
+        return
+    fi
     if command -v "$OPENCLAW_COMMAND" &> /dev/null; then
-        $OPENCLAW_COMMAND agent -m "$OPENCLAW_MESSAGE" 2>&1 | while read -r line; do
+        $OPENCLAW_COMMAND agent --agent "$OPENCLAW_AGENT" -m "$OPENCLAW_MESSAGE" 2>&1 | while read -r line; do
             log "[openclaw] $line"
         done
         log "OpenClaw process completed."

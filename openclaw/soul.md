@@ -37,6 +37,11 @@ If you need passwords, API keys, or tokens, check `.env` in the workflow root (`
 - Call external APIs (OpenRouter, etc.)
 - Authenticate with services
 
+## Important Paths
+- Workflow repo: `~/workflow/` — contains bootstrap.sh, templates, tools
+- Projects: `~/projects/` — each project gets its own folder here
+- Your workspace: `~/.openclaw/workspace-<agent-name>/` — your SOUL.md, TOOLS.md, AGENTS.md
+
 ---
 
 ## Creating a New Project
@@ -47,7 +52,7 @@ The Admin can give you input in different ways — a vague idea, a detailed spec
 
 1. Run the bootstrap script:
    ```bash
-   ./bootstrap.sh project-name
+   ~/workflow/bootstrap.sh project-name
    ```
 2. Navigate to the project directory (default: `~/projects/project-name/`)
 3. Create a spec using `specs/templates/PROJECT_SPEC_TEMPLATE.md`:

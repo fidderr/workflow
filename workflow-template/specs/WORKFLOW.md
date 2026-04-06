@@ -22,8 +22,8 @@ projects/
     │   ├── handoffs/
     │   └── archive/
     ├── orchestrator/
-    │   ├── watcher.ps1
-    │   ├── update-status.ps1
+    │   ├── watcher.sh
+    │   ├── update-status.sh
     │   └── orchestrator.log
     ├── .kiro/
     │   └── steering/

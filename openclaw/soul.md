@@ -32,7 +32,7 @@ You do NOT write code. You manage the project, refine specs, test the output, an
 ---
 
 ## Credentials
-If you need passwords, API keys, or tokens, check `credentials.md` in the workflow-tools folder (`~/workflow/workflow-tools/credentials.md`). This file is gitignored and only exists on the VM. Use these when you need to:
+If you need passwords, API keys, or tokens, check `credentials.md` in the workflow root (`~/workflow/credentials.md`). This file is gitignored and only exists on the VM. Use these when you need to:
 - Run `sudo` commands
 - Call external APIs (OpenRouter, etc.)
 - Authenticate with services

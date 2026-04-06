@@ -18,7 +18,7 @@ set -e
 PROJECT_NAME="$1"
 PROJECTS_DIR="${2:-/home/claw/projects}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-TEMPLATE_DIR="$(dirname "$SCRIPT_DIR")/workflow-template"
+TEMPLATE_DIR="$SCRIPT_DIR/workflow-template"
 PROJECT_ROOT="$PROJECTS_DIR/$PROJECT_NAME"
 
 # Validate

@@ -72,4 +72,4 @@ specs/
 9. Update STATUS.json when done
 
 ## Credentials
-If you need API keys or passwords (e.g., for installing packages, calling APIs), check `~/workflow/workflow-tools/credentials.md`. This file only exists on the VM and is gitignored.
+If you need API keys or passwords (e.g., for installing packages, calling APIs), check `~/workflow/credentials.md`. This file only exists on the VM and is gitignored.

@@ -17,7 +17,7 @@ POLL_INTERVAL=10
 # ------------------------------------------------------------
 # CONFIGURE THESE: How to trigger each agent
 # ------------------------------------------------------------
-KIRO_COMMAND="kiro"
+KIRO_COMMAND="kiro-cli"
 KIRO_MESSAGE="A new task is ready. Read specs/STATUS.json in project '$PROJECT_NAME' at '$PROJECT_ROOT'. Fix all blockers first, then bugs, then visual issues. When done, update STATUS.json and create a handoff."
 
 OPENCLAW_COMMAND="openclaw"

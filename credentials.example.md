@@ -4,7 +4,7 @@ Copy this file to `credentials.md` and fill in your actual values.
 `credentials.md` is gitignored and will never be pushed.
 
 ## System
-- **username:** your-username-here
+- **VM username:** your-username-here
 - **Sudo password:** your-sudo-password-here
 
 ## Admin Contact
@@ -17,7 +17,6 @@ Copy this file to `credentials.md` and fill in your actual values.
 
 ## API Keys
 - **OpenRouter API key:** sk-or-xxxxxxxxxxxxxxxxxxxx
-- **Kiro API key:** xxxxxxxxxxxxxxxxxxxx
 
 ## Services
 - **GitHub token:** ghp_xxxxxxxxxxxxxxxxxxxx

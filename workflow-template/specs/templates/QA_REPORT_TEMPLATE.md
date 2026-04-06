@@ -69,4 +69,4 @@ _Plain language summary of what needs to happen next. This is what Kiro reads fi
 
 > Round 1 findings: [X blockers, Y bugs, Z visual issues, W suggestions].
 > Priority: Fix all blockers first, then bugs, then visual issues.
-> Enhancements can be added freely during bug-fix rounds. Once spec is met with zero bugs, max 2 polish rounds remain.
+> Enhancements can be added freely during bug-fix rounds. Once spec is met with zero bugs, max 5 polish rounds remain.

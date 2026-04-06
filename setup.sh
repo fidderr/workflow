@@ -10,18 +10,24 @@
 #   git clone <your-repo-url> ~/workflow
 #   cd ~/workflow
 #   chmod +x setup.sh
-#   ./setup.sh
+#   ./setup.sh my-agent           # Full install + create agent "my-agent"
+#   ./setup.sh another-agent      # Create another agent (skips already-installed deps)
 #
 # After setup:
 #   1. Fill in ~/workflow/credentials.md with your actual values
-#   2. Open the OpenClaw TUI: openclaw
-#   3. Give the "workflow" agent your spec — done.
+#   2. Open the OpenClaw TUI: openclaw --agent <agent-name>
+#   3. Give the agent your spec — done.
 # ============================================================
 
 set -e
 
 WORKFLOW_DIR="$(cd "$(dirname "$0")" && pwd)"
-AGENT_NAME="workflow"
+AGENT_NAME="$1"
+if [ -z "$AGENT_NAME" ]; then
+    echo "Usage: ./setup.sh <agent-name>"
+    echo "  Example: ./setup.sh my-agent"
+    exit 1
+fi
 WORKSPACE_DIR="$HOME/.openclaw/workspace-$AGENT_NAME"
 
 echo "============================================"
@@ -207,7 +213,6 @@ echo "[8/8] Final setup..."
 
 # Make scripts executable
 chmod +x "$WORKFLOW_DIR/bootstrap.sh"
-chmod +x "$WORKFLOW_DIR/vm-setup.sh"
 find "$WORKFLOW_DIR/workflow-template/orchestrator" -name "*.sh" -exec chmod +x {} \;
 
 # Create projects directory
@@ -236,7 +241,7 @@ echo "  Next steps:"
 echo "    1. Edit credentials.md with your actual values"
 echo "    2. Start a new project:"
 echo "       ./bootstrap.sh my-project"
-echo "    3. Open the workflow agent in OpenClaw TUI:"
+echo "    3. Open the agent in OpenClaw TUI:"
 echo "       openclaw --agent $AGENT_NAME"
 echo "    4. Give it your spec — Kiro gets triggered automatically"
 echo ""

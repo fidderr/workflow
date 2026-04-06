@@ -75,7 +75,7 @@ All paths are relative to the project root. Scripts auto-detect their location.
 - Each round is numbered (Round 1, Round 2, etc.)
 - Blockers must be fixed before anything else
 - Enhancements can be added freely during bug-fix rounds — no approval needed
-- Once spec is met with zero bugs, max 2 polish rounds for enhancements, then ship
+- Once spec is met with zero bugs, max 5 polish rounds for enhancements, then ship
 - Questions should be answered within the same round
 
 ## Naming Conventions

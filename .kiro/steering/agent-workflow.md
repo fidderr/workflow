@@ -65,7 +65,7 @@ specs/
 2. Always use the templates
 3. Write tests for everything
 4. Fix blockers before anything else
-5. Don't scope creep — implement what's in the spec
+5. Don't scope creep — implement what's in the spec first, then handle enhancements
 6. Document what you couldn't verify visually
 7. Reference issue IDs (BLK-01, BUG-03) in handoffs
 8. Keep code clean — lint, format, no dead code

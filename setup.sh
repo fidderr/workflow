@@ -3,8 +3,7 @@
 # Full Setup — Kiro + OpenClaw Workflow
 # ============================================================
 # Run this once on a fresh Ubuntu VM after cloning the repo.
-# It installs everything, creates the OpenClaw agent, sets up
-# Kiro CLI, and configures the model provider.
+# It installs everything, creates the OpenClaw agent, and sets up Kiro CLI.
 #
 # Prerequisites:
 #   1. Clone the repo and fill in .env FIRST:
@@ -44,24 +43,12 @@ if [ ! -f "$ENV_FILE" ]; then
     echo "    nano .env"
     echo ""
     echo "  Fill in at least:"
-    echo "    - OPENROUTER_API_KEY"
-    echo "    - OPENROUTER_MODEL"
-    echo "    - ADMIN_PHONE"
+    echo "    - ADMIN_PHONE (for WhatsApp notifications)"
     exit 1
 fi
 
 # Load credentials
 source "$ENV_FILE"
-
-if [ -z "$OPENROUTER_API_KEY" ] || [ "$OPENROUTER_API_KEY" = "sk-or-xxxxxxxxxxxxxxxxxxxx" ]; then
-    echo "ERROR: OPENROUTER_API_KEY not set in .env"
-    exit 1
-fi
-
-if [ -z "$OPENROUTER_MODEL" ]; then
-    echo "ERROR: OPENROUTER_MODEL not set in .env"
-    exit 1
-fi
 
 echo "============================================"
 echo "  Kiro + OpenClaw Workflow — Full Setup"
@@ -73,7 +60,7 @@ echo ""
 # ----------------------------------------------------------
 # 1. System dependencies
 # ----------------------------------------------------------
-echo "[1/8] Installing system dependencies..."
+echo "[1/7] Installing system dependencies..."
 
 sudo apt-get update -qq
 
@@ -99,7 +86,7 @@ echo ""
 # ----------------------------------------------------------
 # 2. Node.js
 # ----------------------------------------------------------
-echo "[2/8] Checking Node.js..."
+echo "[2/7] Checking Node.js..."
 
 if ! command -v node &> /dev/null; then
     echo "  Installing Node.js LTS..."
@@ -114,7 +101,7 @@ echo ""
 # ----------------------------------------------------------
 # 3. OpenClaw
 # ----------------------------------------------------------
-echo "[3/8] Setting up OpenClaw..."
+echo "[3/7] Setting up OpenClaw..."
 
 if ! command -v openclaw &> /dev/null; then
     echo "  Installing OpenClaw..."
@@ -123,30 +110,13 @@ fi
 
 echo "  openclaw: $(openclaw --version 2>/dev/null || echo 'installed')"
 
-# Write config if not configured yet
+# Run the normal OpenClaw setup if not configured yet
 if [ ! -f "$HOME/.openclaw/openclaw.json" ]; then
-    mkdir -p "$HOME/.openclaw"
-    cat > "$HOME/.openclaw/openclaw.json" << OCEOF
-{
-  "agents": {
-    "defaults": {
-      "model": { "primary": "openrouter/$OPENROUTER_MODEL" }
-    }
-  },
-  "models": {
-    "providers": {
-      "openrouter": {
-        "baseUrl": "https://openrouter.ai/api/v1",
-        "apiKey": "$OPENROUTER_API_KEY",
-        "api": "openai-completions"
-      }
-    }
-  }
-}
-OCEOF
-    echo "  Config written to ~/.openclaw/openclaw.json (OpenRouter + $OPENROUTER_MODEL)"
-else
-    echo "  Config already exists at ~/.openclaw/openclaw.json"
+    echo ""
+    echo "  Running OpenClaw's setup wizard..."
+    echo "  Follow the prompts to configure your model provider and API key."
+    echo ""
+    openclaw setup
 fi
 
 echo ""
@@ -154,7 +124,7 @@ echo ""
 # ----------------------------------------------------------
 # 4. Kiro CLI
 # ----------------------------------------------------------
-echo "[4/8] Setting up Kiro CLI..."
+echo "[4/7] Setting up Kiro CLI..."
 
 if ! command -v kiro-cli &> /dev/null; then
     echo "  Downloading Kiro CLI..."
@@ -185,7 +155,7 @@ echo ""
 # ----------------------------------------------------------
 # 5. Create OpenClaw agent with workspace
 # ----------------------------------------------------------
-echo "[5/8] Creating OpenClaw '$AGENT_NAME' agent..."
+echo "[5/7] Creating OpenClaw '$AGENT_NAME' agent..."
 
 mkdir -p "$WORKSPACE_DIR"
 
@@ -224,17 +194,9 @@ fi
 echo ""
 
 # ----------------------------------------------------------
-# 6. Verify credentials
+# 6. Playwright skill
 # ----------------------------------------------------------
-echo "[6/8] Credentials..."
-echo "  Using: $ENV_FILE"
-
-echo ""
-
-# ----------------------------------------------------------
-# 7. Playwright skill
-# ----------------------------------------------------------
-echo "[7/8] Setting up Playwright..."
+echo "[6/7] Setting up Playwright..."
 
 PLAYWRIGHT_DIR="$HOME/.openclaw/tools/playwright-skill"
 if [ ! -d "$PLAYWRIGHT_DIR" ]; then
@@ -251,7 +213,7 @@ echo ""
 # ----------------------------------------------------------
 # 8. Git config + permissions
 # ----------------------------------------------------------
-echo "[8/8] Final setup..."
+echo "[7/7] Final setup..."
 
 # Make scripts executable
 chmod +x "$WORKFLOW_DIR/bootstrap.sh"

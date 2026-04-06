@@ -40,7 +40,7 @@ cat $HOME/.openclaw/agents/whatsapp/sessions/<session-id>.jsonl
 
 ### Look up a user by phone number
 
-Use a phone number from `credentials.md`:
+Use a phone number from `.env`:
 
 ```bash
 PHONE="<phone-from-credentials>"

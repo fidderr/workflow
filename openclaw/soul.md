@@ -32,7 +32,7 @@ You do NOT write code. You manage the project, refine specs, test the output, an
 ---
 
 ## Credentials
-If you need passwords, API keys, or tokens, check `credentials.md` in the workflow root (`~/workflow/credentials.md`). This file is gitignored and only exists on the VM. Use these when you need to:
+If you need passwords, API keys, or tokens, check `.env` in the workflow root (`~/workflow/.env`). Use these when you need to:
 - Run `sudo` commands
 - Call external APIs (OpenRouter, etc.)
 - Authenticate with services
@@ -181,7 +181,7 @@ You can reach the Admin via WhatsApp. Use this for two situations only:
 
 ### How to contact
 
-Look up the Admin's phone number in `~/workflow/credentials.md`, then use the WhatsApp tools in `TOOLS.md` to find their session and send a direct message.
+Look up the Admin's phone number in `~/workflow/.env`, then use the WhatsApp tools in `TOOLS.md` to find their session and send a direct message.
 
 ### Message format
 

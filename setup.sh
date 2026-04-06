@@ -4,20 +4,23 @@
 # ============================================================
 # Run this once on a fresh Ubuntu VM after cloning the repo.
 # It installs everything, creates the OpenClaw agent, sets up
-# Kiro CLI, and optionally bootstraps your first project.
+# Kiro CLI, and configures the model provider.
 #
-# Usage:
-#   git clone <your-repo-url> ~/workflow
-#   cd ~/workflow
-#   chmod +x setup.sh
-#   ./setup.sh my-agent           # Full install + create agent "my-agent"
-#   ./setup.sh another-agent      # Create another agent (skips already-installed deps)
+# Prerequisites:
+#   1. Clone the repo and fill in .env FIRST:
+#      git clone <your-repo-url> ~/workflow
+#      cd ~/workflow
+#      cp .env.example .env
+#      nano .env   # fill in your values
+#
+#   2. Then run setup:
+#      chmod +x setup.sh
+#      ./setup.sh my-agent
 #
 # After setup:
-#   1. Fill in ~/workflow/credentials.md with your actual values
-#   2. Open the OpenClaw TUI:
+#   1. Open the OpenClaw TUI:
 #      openclaw tui --session <agent-name>
-#   3. Give the agent your spec — done.
+#   2. Give the agent your spec — done.
 # ============================================================
 
 set -e
@@ -30,6 +33,35 @@ if [ -z "$AGENT_NAME" ]; then
     exit 1
 fi
 WORKSPACE_DIR="$HOME/.openclaw/workspace-$AGENT_NAME"
+
+# Check .env exists before doing anything
+ENV_FILE="$WORKFLOW_DIR/.env"
+if [ ! -f "$ENV_FILE" ]; then
+    echo "ERROR: .env not found."
+    echo ""
+    echo "  Before running setup, create it from the template:"
+    echo "    cp .env.example .env"
+    echo "    nano .env"
+    echo ""
+    echo "  Fill in at least:"
+    echo "    - OPENROUTER_API_KEY"
+    echo "    - OPENROUTER_MODEL"
+    echo "    - ADMIN_PHONE"
+    exit 1
+fi
+
+# Load credentials
+source "$ENV_FILE"
+
+if [ -z "$OPENROUTER_API_KEY" ] || [ "$OPENROUTER_API_KEY" = "sk-or-xxxxxxxxxxxxxxxxxxxx" ]; then
+    echo "ERROR: OPENROUTER_API_KEY not set in .env"
+    exit 1
+fi
+
+if [ -z "$OPENROUTER_MODEL" ]; then
+    echo "ERROR: OPENROUTER_MODEL not set in .env"
+    exit 1
+fi
 
 echo "============================================"
 echo "  Kiro + OpenClaw Workflow — Full Setup"
@@ -91,13 +123,30 @@ fi
 
 echo "  openclaw: $(openclaw --version 2>/dev/null || echo 'installed')"
 
-# Run setup if not configured yet
+# Write config if not configured yet
 if [ ! -f "$HOME/.openclaw/openclaw.json" ]; then
-    echo ""
-    echo "  OpenClaw needs initial configuration (API key, model provider)."
-    echo "  Running openclaw setup..."
-    echo ""
-    openclaw setup
+    mkdir -p "$HOME/.openclaw"
+    cat > "$HOME/.openclaw/openclaw.json" << OCEOF
+{
+  "agents": {
+    "defaults": {
+      "model": { "primary": "openrouter/$OPENROUTER_MODEL" }
+    }
+  },
+  "models": {
+    "providers": {
+      "openrouter": {
+        "baseUrl": "https://openrouter.ai/api/v1",
+        "apiKey": "$OPENROUTER_API_KEY",
+        "api": "openai-completions"
+      }
+    }
+  }
+}
+OCEOF
+    echo "  Config written to ~/.openclaw/openclaw.json (OpenRouter + $OPENROUTER_MODEL)"
+else
+    echo "  Config already exists at ~/.openclaw/openclaw.json"
 fi
 
 echo ""
@@ -175,18 +224,10 @@ fi
 echo ""
 
 # ----------------------------------------------------------
-# 6. Set up credentials
+# 6. Verify credentials
 # ----------------------------------------------------------
-echo "[6/8] Setting up credentials..."
-
-CREDS_FILE="$WORKFLOW_DIR/credentials.md"
-if [ ! -f "$CREDS_FILE" ]; then
-    cp "$WORKFLOW_DIR/credentials.example.md" "$CREDS_FILE"
-    echo "  Created credentials.md from template."
-    echo "  >>> IMPORTANT: Edit $CREDS_FILE with your actual values! <<<"
-else
-    echo "  credentials.md already exists."
-fi
+echo "[6/8] Credentials..."
+echo "  Using: $ENV_FILE"
 
 echo ""
 
@@ -235,12 +276,11 @@ echo "============================================"
 echo ""
 echo "  OpenClaw agent: $AGENT_NAME"
 echo "  Workspace:      $WORKSPACE_DIR"
-echo "  Credentials:    $CREDS_FILE"
+echo "  Credentials:    $ENV_FILE"
 echo "  Projects dir:   $HOME/projects"
 echo ""
 echo "  Next steps:"
-echo "    1. Edit credentials.md with your actual values"
-echo "    2. Open the agent in OpenClaw TUI:"
+echo "    1. Open the agent in OpenClaw TUI:"
 echo "       openclaw tui --session $AGENT_NAME"
-echo "    3. Give it your idea or spec — it handles the rest"
+echo "    2. Give it your idea or spec — it handles the rest"
 echo ""

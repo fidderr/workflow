@@ -46,7 +46,7 @@ get_phase() {
 trigger_kiro() {
     log "Triggering Kiro..."
     if command -v "$KIRO_COMMAND" &> /dev/null; then
-        $KIRO_COMMAND --message "$KIRO_MESSAGE" --cwd "$PROJECT_ROOT" 2>&1 | while read -r line; do
+        $KIRO_COMMAND chat --trust-all-tools "$KIRO_MESSAGE" --cwd "$PROJECT_ROOT" 2>&1 | while read -r line; do
             log "[kiro] $line"
         done
         log "Kiro process completed."
@@ -58,7 +58,7 @@ trigger_kiro() {
 trigger_openclaw() {
     log "Triggering OpenClaw..."
     if command -v "$OPENCLAW_COMMAND" &> /dev/null; then
-        $OPENCLAW_COMMAND --message "$OPENCLAW_MESSAGE" 2>&1 | while read -r line; do
+        $OPENCLAW_COMMAND agent -m "$OPENCLAW_MESSAGE" 2>&1 | while read -r line; do
             log "[openclaw] $line"
         done
         log "OpenClaw process completed."

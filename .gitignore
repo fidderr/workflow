@@ -1,0 +1,24 @@
+# Credentials - NEVER commit
+credentials.md
+
+# Orchestrator logs
+orchestrator/orchestrator.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Project build artifacts (inside project folders)
+projects/*/node_modules/
+projects/*/dist/
+projects/*/build/
+projects/*/.next/
+projects/*/.env
+projects/*/.env.local

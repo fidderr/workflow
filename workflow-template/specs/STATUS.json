@@ -1,0 +1,12 @@
+{
+  "currentPhase": "idle",
+  "assignedTo": "none",
+  "project": "",
+  "projectRoot": "",
+  "round": 0,
+  "specFile": "",
+  "lastUpdatedBy": "",
+  "lastUpdatedAt": "",
+  "message": "No active project. Waiting for owner to submit a spec.",
+  "history": []
+}

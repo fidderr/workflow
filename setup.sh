@@ -15,8 +15,8 @@
 #
 # After setup:
 #   1. Fill in ~/workflow/credentials.md with your actual values
-#   2. Open the OpenClaw TUI from the agent workspace:
-#      cd ~/.openclaw/workspace-<agent-name> && openclaw
+#   2. Open the OpenClaw TUI:
+#      openclaw tui --session <agent-name>
 #   3. Give the agent your spec — done.
 # ============================================================
 
@@ -240,9 +240,7 @@ echo "  Projects dir:   $HOME/projects"
 echo ""
 echo "  Next steps:"
 echo "    1. Edit credentials.md with your actual values"
-echo "    2. Start a new project:"
-echo "       ./bootstrap.sh my-project"
-echo "    3. Open the agent in OpenClaw TUI:"
-echo "       cd $WORKSPACE_DIR && openclaw"
-echo "    4. Give it your spec — Kiro gets triggered automatically"
+echo "    2. Open the agent in OpenClaw TUI:"
+echo "       openclaw tui --session $AGENT_NAME"
+echo "    3. Give it your idea or spec — it handles the rest"
 echo ""

@@ -81,9 +81,8 @@ echo "  ├── specs/             (templates, active specs, QA reports)"
 echo "  └── src/               (your code goes here)"
 echo ""
 echo "Next steps:"
-echo "  1. Create a spec in specs/active/ using the template"
-echo "  2. Update status: $PROJECT_ROOT/orchestrator/update-status.sh ready-for-kiro openclaw \"Spec ready\""
-echo "  3. Start the watcher: $PROJECT_ROOT/orchestrator/watcher.sh"
+echo "  Start the watcher: $PROJECT_ROOT/orchestrator/watcher.sh &"
+echo "  Then create a spec in specs/active/ and update STATUS.json."
 echo ""
 
 # Start watcher if --start-watcher flag is passed

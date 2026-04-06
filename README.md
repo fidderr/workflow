@@ -17,20 +17,11 @@ After setup, edit `credentials.md` with your actual values.
 
 ## Usage
 
-```bash
-# Create a new project
-./bootstrap.sh my-project
-
-# Optionally start the watcher immediately
-./bootstrap.sh my-project --start-watcher
-```
-
-Then:
-1. Give OpenClaw an idea or spec
-2. OpenClaw writes a full spec, updates STATUS.json → orchestrator triggers Kiro
-3. Kiro implements + tests → hands off to OpenClaw for QA
-4. OpenClaw tests (using Playwright for web, xdotool for desktop) → reports issues
-5. Loop until done → OpenClaw notifies Admin via WhatsApp
+1. Run setup once: `./setup.sh my-agent`
+2. Open the OpenClaw agent: `openclaw tui --session my-agent`
+3. OpenClaw bootstraps the project, writes the spec, and triggers Kiro automatically
+4. Kiro implements + tests → OpenClaw does QA → loop until done
+5. OpenClaw notifies you via WhatsApp when it's finished
 
 ## Structure
 

@@ -2,7 +2,7 @@
 
 ## Meta
 - **Spec ID:** SPEC-001
-- **Created by:** [Owner / OpenClaw PM]
+- **Created by:** [Admin / OpenClaw PM]
 - **Date:** YYYY-MM-DD
 - **Status:** Draft | Ready for Kiro | In Progress | In QA | Done
 

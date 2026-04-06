@@ -27,7 +27,7 @@ STATUS_FILE="$PROJECT_ROOT/specs/STATUS.json"
 
 # Validate
 VALID_PHASES="idle ready-for-kiro implementation ready-for-qa qa done"
-VALID_AGENTS="owner kiro openclaw orchestrator"
+VALID_AGENTS="admin kiro openclaw orchestrator"
 
 if [ -z "$PHASE" ] || [ -z "$AGENT" ] || [ -z "$MESSAGE" ]; then
     echo "Usage: ./update-status.sh <phase> <agent> <message> [round] [specfile]"

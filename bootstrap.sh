@@ -16,7 +16,7 @@
 set -e
 
 PROJECT_NAME="$1"
-PROJECTS_DIR="${2:-/home/claw/projects}"
+PROJECTS_DIR="${2:-$HOME/projects}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 TEMPLATE_DIR="$SCRIPT_DIR/workflow-template"
 PROJECT_ROOT="$PROJECTS_DIR/$PROJECT_NAME"
@@ -24,7 +24,7 @@ PROJECT_ROOT="$PROJECTS_DIR/$PROJECT_NAME"
 # Validate
 if [ -z "$PROJECT_NAME" ]; then
     echo "Usage: ./bootstrap.sh <project-name> [projects-dir]"
-    echo "  Default projects dir: /home/claw/projects"
+    echo "  Default projects dir: \$HOME/projects"
     exit 1
 fi
 
@@ -81,14 +81,17 @@ echo "  ├── specs/             (templates, active specs, QA reports)"
 echo "  └── src/               (your code goes here)"
 echo ""
 echo "Next steps:"
-echo "  1. OpenClaw: Create a spec in specs/active/ using the template"
-echo "  2. OpenClaw: Run: $PROJECT_ROOT/orchestrator/update-status.sh ready-for-kiro openclaw \"Spec ready\""
+echo "  1. Create a spec in specs/active/ using the template"
+echo "  2. Update status: $PROJECT_ROOT/orchestrator/update-status.sh ready-for-kiro openclaw \"Spec ready\""
 echo "  3. Start the watcher: $PROJECT_ROOT/orchestrator/watcher.sh"
 echo ""
 
 # Start watcher if --start-watcher flag is passed
-if [ "$3" = "--start-watcher" ]; then
-    echo "Starting orchestrator watcher in background..."
-    nohup "$PROJECT_ROOT/orchestrator/watcher.sh" > /dev/null 2>&1 &
-    echo "Watcher started (PID: $!)"
-fi
+for arg in "$@"; do
+    if [ "$arg" = "--start-watcher" ]; then
+        echo "Starting orchestrator watcher in background..."
+        nohup "$PROJECT_ROOT/orchestrator/watcher.sh" > /dev/null 2>&1 &
+        echo "Watcher started (PID: $!)"
+        break
+    fi
+done

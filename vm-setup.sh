@@ -43,6 +43,46 @@ echo "Creating /home/$(whoami)/projects/ ..."
 mkdir -p ~/projects
 echo ""
 
+# Set up UI testing tools
+TOOLS_DIR="$HOME/.openclaw/tools"
+
+echo "Setting up Playwright skill..."
+if [ ! -d "$TOOLS_DIR/playwright-skill" ]; then
+    mkdir -p "$TOOLS_DIR/playwright-skill"
+    echo "  Created $TOOLS_DIR/playwright-skill/"
+    echo "  Install the playwright-skill files, then run: cd $TOOLS_DIR/playwright-skill && npm run setup"
+else
+    echo "  Playwright skill directory already exists."
+fi
+
+echo "Checking computer-use dependencies..."
+MISSING_DEPS=""
+for dep in xdotool scrot xvfb-run; do
+    if ! command -v "$dep" &> /dev/null; then
+        MISSING_DEPS="$MISSING_DEPS $dep"
+    fi
+done
+
+if ! dpkg -s imagemagick &> /dev/null 2>&1; then
+    MISSING_DEPS="$MISSING_DEPS imagemagick"
+fi
+
+if [ -n "$MISSING_DEPS" ]; then
+    echo "  Installing missing packages:$MISSING_DEPS"
+    sudo apt-get update && sudo apt-get install -y $MISSING_DEPS
+else
+    echo "  All computer-use dependencies installed."
+fi
+
+if ! command -v node &> /dev/null; then
+    echo "Installing Node.js (required for Playwright)..."
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+fi
+
+echo "  node: $(node --version 2>/dev/null || echo 'not installed')"
+echo ""
+
 # Configure git for the workflow (so agents can commit)
 echo "Configuring git defaults for this repo..."
 git config --local user.name "workflow-bot"

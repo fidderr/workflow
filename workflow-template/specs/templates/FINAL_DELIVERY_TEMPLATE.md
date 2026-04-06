@@ -60,7 +60,7 @@ _Document any important decisions and why they were made._
 1. Decision — Reason
 
 ## Known Limitations
-_Anything the owner should be aware of._
+_Anything the admin should be aware of._
 
 ---
 

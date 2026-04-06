@@ -1,42 +1,64 @@
 # Kiro + OpenClaw Workflow
 
-Two-agent development workflow: Kiro writes code, OpenClaw manages specs and does visual/functional QA.
+Two-agent development workflow: Kiro writes code, OpenClaw manages specs and does visual/functional QA. An orchestrator watches for phase changes and triggers the right agent automatically.
 
 ## Setup (on the VM)
 
 ```bash
-# Clone the repo
 git clone <your-repo-url> ~/workflow
 cd ~/workflow
-
-# Make scripts executable
-chmod +x bootstrap.sh
-
-# Create your first project
-./bootstrap.sh my-first-project
+chmod +x vm-setup.sh
+./vm-setup.sh
 ```
+
+This installs prerequisites (git, python3, node), sets up UI testing tools (Playwright, xdotool, scrot), and configures git.
+
+After setup, copy `credentials.example.md` to `credentials.md` and fill in your values. The credentials file is gitignored.
 
 ## Usage
 
+```bash
+# Create a new project
+./bootstrap.sh my-project
+
+# Optionally start the watcher immediately
+./bootstrap.sh my-project --start-watcher
+```
+
+Then:
 1. Give OpenClaw an idea or spec
-2. OpenClaw runs `./bootstrap.sh project-name` to create a project
-3. OpenClaw writes a spec, updates STATUS.json → Kiro gets triggered
-4. Kiro codes + tests → hands off to OpenClaw for QA
-5. OpenClaw tests visually/functionally → reports back to Kiro
-6. Loop until done
+2. OpenClaw writes a full spec, updates STATUS.json → orchestrator triggers Kiro
+3. Kiro implements + tests → hands off to OpenClaw for QA
+4. OpenClaw tests (using Playwright for web, xdotool for desktop) → reports issues
+5. Loop until done → OpenClaw notifies Admin via WhatsApp
 
 ## Structure
 
 ```
-~/workflow/
-├── bootstrap.sh              # Creates new projects
-├── openclaw/soul.md          # OpenClaw instructions
-└── workflow-template/        # Blueprint copied per project
+~/workflow/                       ← This repo
+├── bootstrap.sh                  # Creates new projects from template
+├── vm-setup.sh                   # One-time VM setup
+├── credentials.example.md        # Template for credentials.md
+├── TOOLS.md                      # All tools reference (WhatsApp, Whisper, TTS, Playwright, etc.)
+├── openclaw/soul.md              # OpenClaw agent instructions
+├── .kiro/steering/               # Kiro steering rules
+└── workflow-template/            # Blueprint copied per project
+    ├── orchestrator/             # Watcher + status update scripts
+    └── specs/                    # Templates, workflow docs
 
-~/projects/
-└── my-project/               # Each project is independent
-    ├── .kiro/steering/       # Kiro instructions
-    ├── orchestrator/         # Watcher + status scripts
-    ├── specs/                # Specs, QA reports, handoffs
-    └── src/                  # Code
+~/projects/                       ← Created projects
+└── my-project/
+    ├── .kiro/steering/           # Kiro instructions (copied from template)
+    ├── orchestrator/             # Watcher + status scripts
+    ├── specs/                    # Specs, QA reports, handoffs, templates
+    └── src/                      # Code goes here
 ```
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `TOOLS.md` | All tools: WhatsApp, Whisper, TTS, Playwright, Computer Use, config |
+| `openclaw/soul.md` | OpenClaw's full instructions (PM + QA role) |
+| `.kiro/steering/agent-workflow.md` | Kiro's instructions (developer role) |
+| `credentials.example.md` | Template for secrets (copy to `credentials.md`) |

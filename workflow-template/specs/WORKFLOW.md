@@ -1,7 +1,7 @@
 # Agent Workflow: Kiro + OpenClaw
 
 ## Roles
-- **Owner (You):** Delivers the initial idea or feature request
+- **Admin (You):** Delivers the initial idea or feature request
 - **OpenClaw PM:** Refines specs, manages the project, performs visual/functional QA
 - **Kiro:** Writes code, writes tests, handles implementation
 
@@ -38,7 +38,7 @@ All paths are relative to the project root. Scripts auto-detect their location.
 ## Workflow Cycle
 
 ### Phase 1: Spec Creation
-1. Owner delivers idea to OpenClaw PM
+1. Admin delivers idea to OpenClaw PM
 2. OpenClaw PM creates a spec using `specs/templates/PROJECT_SPEC_TEMPLATE.md`
 3. OpenClaw fills gaps, adds detail, defines "definition of done"
 4. OpenClaw places spec in `specs/active/`
@@ -74,7 +74,8 @@ All paths are relative to the project root. Scripts auto-detect their location.
 - All communication goes through files in `specs/`
 - Each round is numbered (Round 1, Round 2, etc.)
 - Blockers must be fixed before anything else
-- Enhancements require Owner approval
+- Enhancements can be added freely during bug-fix rounds — no approval needed
+- Once spec is met with zero bugs, max 2 polish rounds for enhancements, then ship
 - Questions should be answered within the same round
 
 ## Naming Conventions

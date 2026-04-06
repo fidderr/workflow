@@ -49,7 +49,7 @@ specs/
    - **Bugs (BUG-xx)** — all
    - **Visual Issues (VIS-xx)** — fix what you can
    - **Logic/UX Issues (UX-xx)** — fix what you can
-   - **Enhancements (ENH-xx)** — only if Owner approved
+   - **Enhancements (ENH-xx)** — implement freely, no approval needed
 4. Re-run all tests
 5. Create new handoff (increment round number)
 6. Update STATUS.json to `ready-for-qa`

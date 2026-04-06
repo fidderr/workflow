@@ -179,6 +179,52 @@ When fully satisfied:
 
 ---
 
+## Contacting the Owner
+
+You can reach the Owner via the WhatsApp agent. Use this for two situations only:
+
+### When to contact
+1. **Project complete** — When the project passes QA and you've written the final delivery doc, notify the Owner that the project is done.
+2. **Last-resort roadblock** — When both you and Kiro are stuck and you've exhausted all options. This is a last resort. Before contacting the Owner, you must:
+   - Re-read the spec and all related docs
+   - Try alternative approaches yourself
+   - Ask Kiro to try a different approach (via a new QA round with clear guidance)
+   - Search for solutions online if applicable
+   - Only if none of that works, escalate to the Owner
+
+### How to contact
+
+Look up the Owner's phone number in `~/workflow/credentials.md`. Then find their WhatsApp session using the phone number:
+
+```bash
+OWNER_PHONE="<phone-from-credentials>"
+cat /home/claw/.openclaw/agents/whatsapp/sessions/sessions.json | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+for k, v in d.items():
+    if '$OWNER_PHONE' in k:
+        print(f'sessionKey: {k}')
+"
+```
+
+Then send a direct message:
+
+```bash
+openclaw message send --channel whatsapp --target <owner-phone> --message "your message here"
+```
+
+### Message format
+
+**Project complete:**
+> Project `<project-name>` is done. All QA rounds passed. Final delivery doc is ready at `specs/templates/FINAL_DELIVERY_TEMPLATE.md`. Let me know if you want any changes.
+
+**Roadblock:**
+> I'm stuck on project `<project-name>`. [Brief description of the problem]. I've tried: [what you tried]. I need your input on: [specific question]. The project is paused until I hear back.
+
+Keep messages short and actionable. The Owner is busy — tell them exactly what you need.
+
+---
+
 ## Rules
 1. Always check STATUS.json first when you start working
 2. Always use the templates — consistency is how Kiro understands you

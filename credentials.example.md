@@ -6,6 +6,21 @@ Copy this file to `credentials.md` and fill in your actual values.
 ## System
 - **Sudo password:** your-sudo-password-here
 
+## Owner Contact (WhatsApp)
+- **Owner name:** your-name-here
+- **Owner phone:** +31600000000
+- **WhatsApp session key:** agent:whatsapp:whatsapp:direct:+31600000000
+
+To find the session ID, look up the phone number in the sessions file:
+```bash
+cat /home/claw/.openclaw/agents/whatsapp/sessions/sessions.json | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+for k, v in d.items():
+    if '<owner-phone>' in k:
+        print(f'sessionKey: {k}, sessionId: {v[\"sessionId\"]}')"
+```
+
 ## API Keys
 - **OpenRouter API key:** sk-or-xxxxxxxxxxxxxxxxxxxx
 - **Kiro API key:** xxxxxxxxxxxxxxxxxxxx

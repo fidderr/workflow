@@ -7,13 +7,13 @@ Two-agent development workflow: Kiro writes code, OpenClaw manages specs and doe
 ```bash
 git clone <your-repo-url> ~/workflow
 cd ~/workflow
-chmod +x vm-setup.sh
-./vm-setup.sh
+chmod +x setup.sh
+./setup.sh
 ```
 
-This installs prerequisites (git, python3, node), sets up UI testing tools (Playwright, xdotool, scrot), and configures git.
+This handles everything: system dependencies, Node.js, OpenClaw + agent creation, Kiro CLI + auth, Playwright, git config, and credentials template.
 
-After setup, copy `credentials.example.md` to `credentials.md` and fill in your values. The credentials file is gitignored.
+After setup, edit `credentials.md` with your actual values.
 
 ## Usage
 
@@ -36,8 +36,9 @@ Then:
 
 ```
 ~/workflow/                       ← This repo
+├── setup.sh                      # Full setup (run this first)
+├── vm-setup.sh                   # Lightweight deps-only setup
 ├── bootstrap.sh                  # Creates new projects from template
-├── vm-setup.sh                   # One-time VM setup
 ├── credentials.example.md        # Template for credentials.md
 ├── TOOLS.md                      # All tools reference (WhatsApp, Whisper, TTS, Playwright, etc.)
 ├── openclaw/soul.md              # OpenClaw agent instructions

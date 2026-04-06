@@ -205,7 +205,7 @@ echo ""
 # ----------------------------------------------------------
 # 6. Playwright skill
 # ----------------------------------------------------------
-echo "[6/7] Setting up Playwright..."
+echo "[6/8] Setting up Playwright..."
 
 PLAYWRIGHT_DIR="$HOME/.openclaw/tools/playwright-skill"
 if [ ! -d "$PLAYWRIGHT_DIR" ]; then
@@ -220,9 +220,9 @@ fi
 echo ""
 
 # ----------------------------------------------------------
-# 8. Git config + permissions
+# 7. Git config + permissions
 # ----------------------------------------------------------
-echo "[7/7] Final setup..."
+echo "[7/8] Git config + permissions..."
 
 # Make scripts executable
 chmod +x "$WORKFLOW_DIR/bootstrap.sh"
@@ -239,6 +239,28 @@ echo "  Done."
 echo ""
 
 # ----------------------------------------------------------
+# 8. Bootstrap project + start watcher
+# ----------------------------------------------------------
+echo "[8/8] Bootstrapping project '$AGENT_NAME'..."
+
+PROJECT_ROOT="$HOME/projects/$AGENT_NAME"
+
+if [ ! -d "$PROJECT_ROOT" ]; then
+    "$WORKFLOW_DIR/bootstrap.sh" "$AGENT_NAME"
+else
+    echo "  Project already exists at $PROJECT_ROOT"
+fi
+
+# Save agent name in the project so the watcher knows which agent to use
+echo "$AGENT_NAME" > "$PROJECT_ROOT/.agent-name"
+
+# Start the watcher
+echo "  Starting watcher..."
+"$PROJECT_ROOT/orchestrator/watcher.sh" &
+
+echo ""
+
+# ----------------------------------------------------------
 # Summary + Auto-start
 # ----------------------------------------------------------
 echo "============================================"
@@ -247,8 +269,8 @@ echo "============================================"
 echo ""
 echo "  OpenClaw agent: $AGENT_NAME"
 echo "  Workspace:      $WORKSPACE_DIR"
+echo "  Project:        $PROJECT_ROOT"
 echo "  Credentials:    $ENV_FILE"
-echo "  Projects dir:   $HOME/projects"
 echo ""
 
 # Start the gateway service
@@ -268,5 +290,5 @@ openclaw dashboard 2>/dev/null || true
 
 echo ""
 echo "  Your agent '$AGENT_NAME' is ready."
-echo "  Open the dashboard chat to give it your project spec."
+echo "  Open the dashboard chat and give it your project spec."
 echo ""

@@ -3,8 +3,8 @@
 # Agent Orchestrator - Watches STATUS.json for handoffs
 # Auto-detects project root from its own location
 # ============================================================
-# Usage: ./orchestrator/watcher.sh
-# Or background: nohup ./orchestrator/watcher.sh &
+# Usage: ./orchestrator/watcher.sh <agent-name>
+# Or background: nohup ./orchestrator/watcher.sh <agent-name> &
 # ============================================================
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -14,6 +14,31 @@ STATUS_FILE="$PROJECT_ROOT/specs/STATUS.json"
 LOG_FILE="$PROJECT_ROOT/orchestrator/orchestrator.log"
 POLL_INTERVAL=10
 
+OPENCLAW_AGENT="$1"
+if [ -z "$OPENCLAW_AGENT" ]; then
+    # Try to read from .agent-name in the project root
+    if [ -f "$PROJECT_ROOT/.agent-name" ]; then
+        OPENCLAW_AGENT=$(cat "$PROJECT_ROOT/.agent-name")
+    else
+        echo "Usage: ./orchestrator/watcher.sh <agent-name>"
+        echo "  Or create a .agent-name file in the project root."
+        exit 1
+    fi
+fi
+
+# If not already in a dedicated terminal, open one
+if [ -z "$WATCHER_IN_TERMINAL" ]; then
+    export WATCHER_IN_TERMINAL=1
+    if command -v gnome-terminal &> /dev/null; then
+        gnome-terminal --title="Watcher: $PROJECT_NAME" -- bash -c "\"$0\" \"$OPENCLAW_AGENT\"; exec bash" 2>/dev/null
+        exit 0
+    elif command -v xterm &> /dev/null; then
+        xterm -title "Watcher: $PROJECT_NAME" -e "\"$0\" \"$OPENCLAW_AGENT\"" &
+        exit 0
+    fi
+    # No GUI terminal available — continue in current terminal
+fi
+
 # ------------------------------------------------------------
 # CONFIGURE THESE: How to trigger each agent
 # ------------------------------------------------------------
@@ -21,7 +46,6 @@ KIRO_COMMAND="kiro-cli"
 KIRO_MESSAGE="A new task is ready. Read specs/STATUS.json in project '$PROJECT_NAME' at '$PROJECT_ROOT'. Fix all blockers first, then bugs, then visual issues. When done, update STATUS.json and create a handoff."
 
 OPENCLAW_COMMAND="openclaw"
-OPENCLAW_AGENT="${OPENCLAW_AGENT:-$PROJECT_NAME}" # Defaults to project name (matches agent name from setup.sh)
 OPENCLAW_MESSAGE="Kiro finished implementation for project '$PROJECT_NAME' at '$PROJECT_ROOT'. Read the handoff, set up a dev build, test everything, create a QA report, and update STATUS.json."
 
 # ------------------------------------------------------------

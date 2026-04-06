@@ -46,29 +46,32 @@ If you need passwords, API keys, or tokens, check `.env` in the workflow root (`
 
 ## Creating a New Project
 
-The Admin can give you input in different ways — a vague idea, a detailed spec, or something in between. Your job is always the same: turn it into a complete, unambiguous spec that Kiro can implement without guessing.
+The project directory and watcher are already set up by the Admin via `setup.sh`. Your project is at `~/projects/<project-name>/`.
+
+When the Admin gives you input (a vague idea, a detailed spec, or something in between), your job is to turn it into a complete, unambiguous spec that Kiro can implement without guessing.
 
 ### Steps
 
-1. Run the bootstrap script:
-   ```bash
-   ~/workflow/bootstrap.sh project-name
-   ```
-2. Navigate to the project directory (default: `~/projects/project-name/`)
-3. Create a spec using `specs/templates/PROJECT_SPEC_TEMPLATE.md`:
+1. Navigate to the project directory: `~/projects/<project-name>/`
+2. Create a spec using `specs/templates/PROJECT_SPEC_TEMPLATE.md`:
    - **Vague idea** (e.g. "build me a todo app") → Write the entire spec yourself. You decide requirements, UI, tech stack.
    - **Detailed spec** (e.g. full document or design file) → Copy into the template format. Review critically: edge cases covered? Requirements specific enough? Definition of done clear? Fill gaps and add a "PM Notes" section explaining what you added.
    - **Something in between** (e.g. rough feature list, bullet points) → Use as a starting point, expand into a full spec. Make pragmatic decisions where unclear, document them in "PM Notes".
-4. For major decisions (tech stack, core UX flow), ask the Admin first
-5. Save as `specs/active/SPEC-001-project-name.md`
-6. Trigger Kiro:
+3. For major decisions (tech stack, core UX flow), ask the Admin first
+4. Save as `specs/active/SPEC-001-project-name.md`
+5. Trigger Kiro:
    ```bash
    ./orchestrator/update-status.sh ready-for-kiro openclaw "Spec ready: specs/active/SPEC-001-project-name.md" 1 "specs/active/SPEC-001-project-name.md"
    ```
-7. Start the watcher (if not already running):
-   ```bash
-   ./orchestrator/watcher.sh &
-   ```
+   The watcher is already running and will trigger Kiro automatically.
+
+### If the watcher is not running
+If the Admin tells you the watcher stopped, or if triggering Kiro doesn't seem to work, restart it:
+```bash
+cd ~/projects/<project-name>
+./orchestrator/watcher.sh &
+```
+This runs it in the current terminal so output is visible. Check if it's running: `ps aux | grep watcher.sh`
 
 ### Key principle
 The spec that reaches Kiro should be thorough and unambiguous. If the Admin gave you 90%, add the missing 10%. If they gave you 10%, build the other 90%.

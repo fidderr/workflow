@@ -84,13 +84,3 @@ echo "Next steps:"
 echo "  Start the watcher: $PROJECT_ROOT/orchestrator/watcher.sh &"
 echo "  Then create a spec in specs/active/ and update STATUS.json."
 echo ""
-
-# Start watcher if --start-watcher flag is passed
-for arg in "$@"; do
-    if [ "$arg" = "--start-watcher" ]; then
-        echo "Starting orchestrator watcher in background..."
-        nohup "$PROJECT_ROOT/orchestrator/watcher.sh" > /dev/null 2>&1 &
-        echo "Watcher started (PID: $!)"
-        break
-    fi
-done

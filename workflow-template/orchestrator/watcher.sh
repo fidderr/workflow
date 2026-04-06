@@ -13,6 +13,8 @@ PROJECT_NAME="$(basename "$PROJECT_ROOT")"
 STATUS_FILE="$PROJECT_ROOT/specs/STATUS.json"
 LOG_FILE="$PROJECT_ROOT/orchestrator/orchestrator.log"
 POLL_INTERVAL=10
+MAX_RETRIES=3
+RETRY_DELAY=60
 
 OPENCLAW_AGENT="$1"
 if [ -z "$OPENCLAW_AGENT" ]; then
@@ -75,25 +77,60 @@ trigger_kiro() {
             log "[kiro] $line"
         done
         log "Kiro process completed."
+        return 0
     else
         log "ERROR: '$KIRO_COMMAND' not found. Configure KIRO_COMMAND in watcher.sh"
+        return 1
     fi
 }
 
 trigger_openclaw() {
     log "Triggering OpenClaw..."
     if [ -z "$OPENCLAW_AGENT" ]; then
-        log "ERROR: OPENCLAW_AGENT not set. Edit watcher.sh and set OPENCLAW_AGENT to your agent name."
-        return
+        log "ERROR: OPENCLAW_AGENT not set."
+        return 1
     fi
     if command -v "$OPENCLAW_COMMAND" &> /dev/null; then
         $OPENCLAW_COMMAND agent --agent "$OPENCLAW_AGENT" -m "$OPENCLAW_MESSAGE" 2>&1 | while read -r line; do
             log "[openclaw] $line"
         done
         log "OpenClaw process completed."
+        return 0
     else
         log "ERROR: '$OPENCLAW_COMMAND' not found. Configure OPENCLAW_COMMAND in watcher.sh"
+        return 1
     fi
+}
+
+# Run a trigger function with retries if the phase doesn't change after
+run_with_retry() {
+    local trigger_fn="$1"
+    local expected_phase="$2"
+    local attempt=1
+
+    while [ $attempt -le $MAX_RETRIES ]; do
+        $trigger_fn
+
+        # Check if the phase changed (meaning the agent did its job)
+        sleep 5
+        local current_phase=$(get_phase)
+        if [ "$current_phase" != "$expected_phase" ]; then
+            log "Phase changed to '$current_phase' — agent completed successfully."
+            return 0
+        fi
+
+        if [ $attempt -lt $MAX_RETRIES ]; then
+            log "Phase still '$expected_phase' after attempt $attempt/$MAX_RETRIES. Retrying in ${RETRY_DELAY}s..."
+            sleep "$RETRY_DELAY"
+        else
+            log "Phase still '$expected_phase' after $MAX_RETRIES attempts. Watcher stopping."
+            log "To restart: $PROJECT_ROOT/orchestrator/watcher.sh"
+            log "Then re-trigger: $PROJECT_ROOT/orchestrator/update-status.sh $expected_phase kiro \"Retry\""
+            exit 1
+        fi
+        attempt=$((attempt + 1))
+    done
+    return 1
 }
 
 # ------------------------------------------------------------
@@ -117,10 +154,10 @@ while true; do
 
         case "$PHASE" in
             "ready-for-kiro")
-                trigger_kiro
+                run_with_retry trigger_kiro "ready-for-kiro"
                 ;;
             "ready-for-qa")
-                trigger_openclaw
+                run_with_retry trigger_openclaw "ready-for-qa"
                 ;;
             "done")
                 log "PROJECT COMPLETE. Orchestrator stopping."
@@ -134,7 +171,8 @@ while true; do
                 ;;
         esac
 
-        LAST_PHASE="$PHASE"
+        # Re-read phase after trigger (it may have changed during retries)
+        LAST_PHASE=$(get_phase)
     fi
 
     sleep "$POLL_INTERVAL"

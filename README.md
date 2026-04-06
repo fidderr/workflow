@@ -28,6 +28,27 @@ This reads your API key and model from `.env` and handles everything: system dep
 5. Kiro implements + tests → OpenClaw does QA → loop until done
 6. OpenClaw notifies you via WhatsApp when it's finished
 
+## Watcher
+
+The watcher monitors STATUS.json and triggers the right agent on phase changes. Setup starts it automatically.
+
+```bash
+# Start watcher (opens in its own terminal if GUI available)
+~/projects/my-project/orchestrator/watcher.sh
+
+# Check if it's running
+ps aux | grep watcher.sh
+
+# Re-trigger a phase change (if watcher is already running)
+~/projects/my-project/orchestrator/update-status.sh ready-for-kiro openclaw "Retry round 1"
+~/projects/my-project/orchestrator/update-status.sh ready-for-qa kiro "Retry QA"
+
+# View live logs
+tail -f ~/projects/my-project/orchestrator/orchestrator.log
+```
+
+The watcher retries up to 3 times if an agent fails. After that it exits and logs how to restart.
+
 ## Structure
 
 ```

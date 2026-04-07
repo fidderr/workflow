@@ -91,7 +91,7 @@ trigger_openclaw() {
         return 1
     fi
     if command -v "$OPENCLAW_COMMAND" &> /dev/null; then
-        $OPENCLAW_COMMAND agent --agent "$OPENCLAW_AGENT" -m "$OPENCLAW_MESSAGE" 2>&1 | while read -r line; do
+        $OPENCLAW_COMMAND agent --agent "$OPENCLAW_AGENT" --local -m "$OPENCLAW_MESSAGE" 2>&1 | while read -r line; do
             log "[openclaw] $line"
         done
         log "OpenClaw process completed."

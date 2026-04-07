@@ -110,7 +110,7 @@ run_openclaw() {
         log "ERROR: openclaw not found. Install it or check PATH."
         return 1
     fi
-    "$OC_BIN" agent --agent "$OPENCLAW_AGENT" --local -m \
+    "$OC_BIN" agent --agent "$OPENCLAW_AGENT" --local --verbose on -m \
         "Round $round. Here is your ticket from Kiro. Test what was built. If issues, write ticket.md (see templates/ticket.md for format) with what to fix. If all good, create done.md (see templates/done.md for format).
 
 --- TICKET ---
@@ -211,7 +211,7 @@ while true; do
     if [ -z "$TICKET" ] && [ "$WORKER" = "openclaw" ]; then
         log "No tickets yet. Triggering OpenClaw to create first ticket from SPEC.md..."
         local OC_BIN=$(command -v openclaw 2>/dev/null || echo "$HOME/.npm-global/bin/openclaw")
-        "$OC_BIN" agent --agent "$OPENCLAW_AGENT" --local -m \
+        "$OC_BIN" agent --agent "$OPENCLAW_AGENT" --local --verbose on -m \
             "Read SPEC.md in ~/projects/$PROJECT_NAME and write ticket.md with implementation instructions for Kiro." \
             2>&1 | while read -r line; do log "[openclaw] $line"; done
         log "OpenClaw exited."

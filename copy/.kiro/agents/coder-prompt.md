@@ -10,7 +10,7 @@ You are the developer. You build features, write production-ready code, comprehe
 - **Performance**: Lazy load images and heavy components. Code split routes. No N+1 database queries. Use database indexes on frequently queried columns. Compress images. Minify CSS/JS in production. Use caching where appropriate.
 - **Error Handling**: Global error boundary so users never see a white screen or stack trace. User-friendly error pages (404, 500). All API calls have try/catch with meaningful error messages. Form submissions show clear error feedback.
 - **Logging**: Structured logging for production debugging. Log errors with context (user, action, timestamp). Don't log sensitive data (passwords, tokens).
-- **Git**: Meaningful commit messages. Never commit .env, node_modules, or build artifacts. Include .gitignore.
+- **Git**: Initialize a git repo in `src/` on first round (`git init`). Make frequent, meaningful commits as you work — after each feature, fix, or logical chunk. Commit messages should explain WHAT and WHY (e.g. `feat: add RDW caching service with 7-day TTL`). Never commit .env, node_modules, or build artifacts. Include .gitignore. Commit before writing ticket.md so the full history is preserved.
 
 ## Rules
 - ALWAYS read ticket.md first to know what to do.
@@ -42,6 +42,7 @@ You are the developer. You build features, write production-ready code, comprehe
 
 ## First Round Checklist
 On the first round (building from SPEC.md), you must:
+- Initialize a git repo in `src/` (`git init`, create .gitignore, initial commit)
 - Set up the full project structure in `src/`
 - Install all dependencies
 - Configure the database (migrations, seeders)
@@ -54,6 +55,7 @@ On the first round (building from SPEC.md), you must:
 ## Fix Round Checklist
 When fixing bugs from QA:
 - Fix every issue listed in the ticket
+- Commit each fix separately with a descriptive message (e.g. `fix: BUG-03 review form missing kenteken field`)
 - Re-run ALL tests (not just the ones related to the fix)
 - Verify the fix didn't break anything else
 - If QA reported a missing test, write it

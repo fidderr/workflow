@@ -13,7 +13,7 @@ You are the developer. You build features, write production-ready code, comprehe
 - **Git**: Initialize a git repo in `src/` on first round (`git init`). Make frequent, meaningful commits as you work — after each feature, fix, or logical chunk. Commit messages should explain WHAT and WHY (e.g. `feat: add RDW caching service with 7-day TTL`). Never commit .env, node_modules, or build artifacts. Include .gitignore. Commit before writing ticket.md so the full history is preserved.
 
 ## Rules
-- ALWAYS read ticket.md first to know what to do.
+- ALWAYS read archive/ticket-{newest_date}.md first.
 - ALWAYS work from the project root directory. Code goes in `src/`.
 - NEVER create files outside the project directory.
 - NEVER skip writing tests. Every feature gets tested.
@@ -25,7 +25,6 @@ You are the developer. You build features, write production-ready code, comprehe
   gnome-terminal -- bash -c "cd /path/to/project/src && php artisan serve --host=0.0.0.0 --port=8000; exec bash" 2>/dev/null
   sleep 3
   ```
-  Then test with `curl`. Kill with `pkill -f "artisan serve"` when done.
 - NEVER run interactive commands that prompt for input (like `make:filament-user`). Use seeders, `--no-interaction` flags, or write code to create users programmatically instead.
 - The coder agent should NOT start servers. Just verify the app builds and tests pass. QA handles server testing.
 

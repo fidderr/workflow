@@ -46,6 +46,59 @@ get_latest_ticket() {
     ls -t "$PROJECT_ROOT/archive"/ticket-*.md 2>/dev/null | head -1
 }
 
+STALL_TIMEOUT=180 # 3 minutes with no log output = stuck
+MAX_WATCHDOG_FAILS=3
+
+# Watchdog: spawns a separate Kiro agent to diagnose and fix stalls
+start_watchdog() {
+    local pid="$1"
+    (
+        local watchdog_fails=0
+        while kill -0 "$pid" 2>/dev/null; do
+            local last_mod=$(stat -c %Y "$LOG_FILE" 2>/dev/null || echo 0)
+            sleep 60
+            local new_mod=$(stat -c %Y "$LOG_FILE" 2>/dev/null || echo 0)
+            if [ "$last_mod" = "$new_mod" ]; then
+                local stale_seconds=$(( $(date +%s) - new_mod ))
+                if [ "$stale_seconds" -ge "$STALL_TIMEOUT" ]; then
+                    watchdog_fails=$((watchdog_fails + 1))
+                    log "WATCHDOG: No log activity for ${STALL_TIMEOUT}s. Attempt $watchdog_fails/$MAX_WATCHDOG_FAILS..."
+
+                    if [ "$watchdog_fails" -ge "$MAX_WATCHDOG_FAILS" ]; then
+                        log "WATCHDOG: $MAX_WATCHDOG_FAILS failed unstick attempts. Killing everything."
+                        pkill -f "kiro-cli" 2>/dev/null
+                        pkill -f "artisan serve" 2>/dev/null
+                        pkill -f "npm run dev" 2>/dev/null
+                        pkill -f "vite" 2>/dev/null
+                        log "WATCHDOG: Watcher stopping."
+                        log "Restart: $PROJECT_ROOT/watcher.sh"
+                        kill $$ 2>/dev/null  # kill the main watcher
+                        exit 1
+                    fi
+
+                    log "WATCHDOG: Spawning watchdog agent to diagnose..."
+                    gnome-terminal --title="Watchdog: $PROJECT_NAME" -- bash -c "cd $PROJECT_ROOT && kiro-cli chat --no-interactive --trust-all-tools --agent watchdog 'The agent working in $PROJECT_ROOT has been stuck for 3+ minutes with no log output. Check watcher.log and .last-run.log to figure out why, kill whatever is blocking, and exit.'; exec bash" 2>/dev/null
+                    log "WATCHDOG: Watchdog agent spawned in separate terminal."
+
+                    # Wait for watchdog to potentially fix things
+                    sleep 60
+
+                    # Check if logs started moving again
+                    local after_fix_mod=$(stat -c %Y "$LOG_FILE" 2>/dev/null || echo 0)
+                    if [ "$after_fix_mod" != "$new_mod" ]; then
+                        log "WATCHDOG: Unstick successful! Logs moving again. Resetting fail counter."
+                        watchdog_fails=0
+                    fi
+                fi
+            else
+                # Logs are moving, reset fail counter
+                watchdog_fails=0
+            fi
+        done
+    ) &
+    echo $!
+}
+
 archive_ticket() {
     local from="$1"
     if [ -f "$PROJECT_ROOT/ticket.md" ]; then
@@ -77,7 +130,11 @@ $spec_content
 --- TICKET ---
 $content
 --- END TICKET ---") \
-        2>&1 | tee "$run_log" | while read -r line; do log "[coder] $line"; done
+        2>&1 | tee "$run_log" | while read -r line; do log "[coder] $line"; done &
+    local agent_pid=$!
+    local watchdog_pid=$(start_watchdog $agent_pid)
+    wait $agent_pid 2>/dev/null
+    kill $watchdog_pid 2>/dev/null
     log "Coder exited."
 }
 
@@ -94,7 +151,11 @@ run_qa() {
 --- TICKET ---
 $content
 --- END TICKET ---") \
-        2>&1 | tee "$run_log" | while read -r line; do log "[qa] $line"; done
+        2>&1 | tee "$run_log" | while read -r line; do log "[qa] $line"; done &
+    local agent_pid=$!
+    local watchdog_pid=$(start_watchdog $agent_pid)
+    wait $agent_pid 2>/dev/null
+    kill $watchdog_pid 2>/dev/null
     log "QA exited."
 }
 

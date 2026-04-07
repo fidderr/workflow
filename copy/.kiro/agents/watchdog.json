@@ -1,0 +1,8 @@
+{
+  "name": "watchdog",
+  "description": "Monitors and unsticks other agents when they get blocked by long-running processes.",
+  "prompt": "file://./watchdog-prompt.md",
+  "tools": ["*"],
+  "allowedTools": ["read", "shell", "@builtin"],
+  "model": "claude-sonnet-4"
+}

@@ -104,7 +104,13 @@ run_openclaw() {
     log "Running OpenClaw (round $round)..."
     local content=$(cat "$ticket")
     local run_log="$PROJECT_ROOT/.last-run.log"
-    openclaw agent --agent "$OPENCLAW_AGENT" --local -m \
+    # Find openclaw binary
+    local OC_BIN=$(command -v openclaw 2>/dev/null || echo "$HOME/.npm-global/bin/openclaw")
+    if [ ! -x "$OC_BIN" ]; then
+        log "ERROR: openclaw not found. Install it or check PATH."
+        return 1
+    fi
+    "$OC_BIN" agent --agent "$OPENCLAW_AGENT" --local -m \
         "Round $round. Here is your ticket from Kiro. Test what was built. If issues, write ticket.md (see templates/ticket.md for format) with what to fix. If all good, create done.md (see templates/done.md for format).
 
 --- TICKET ---
@@ -170,6 +176,19 @@ if [ ! -f "$PROJECT_ROOT/SPEC.md" ]; then
     exit 1
 fi
 
+# Archive any leftover ticket.md from a previous run
+if [ -f "$PROJECT_ROOT/ticket.md" ]; then
+    PREV_WORKER=$(get_worker)
+    LEFTOVER_FROM="UNKNOWN"
+    if [ "$PREV_WORKER" = "kiro" ]; then
+        LEFTOVER_FROM="CLAW"
+    elif [ "$PREV_WORKER" = "openclaw" ]; then
+        LEFTOVER_FROM="KIRO"
+    fi
+    log "Found leftover ticket.md — archiving before starting."
+    archive_ticket "$LEFTOVER_FROM"
+fi
+
 while true; do
     # Check if done
     if [ -f "$PROJECT_ROOT/done.md" ]; then
@@ -191,7 +210,8 @@ while true; do
     # First run: no tickets yet, trigger OpenClaw to create the first one from SPEC.md
     if [ -z "$TICKET" ] && [ "$WORKER" = "openclaw" ]; then
         log "No tickets yet. Triggering OpenClaw to create first ticket from SPEC.md..."
-        openclaw agent --agent "$OPENCLAW_AGENT" --local -m \
+        local OC_BIN=$(command -v openclaw 2>/dev/null || echo "$HOME/.npm-global/bin/openclaw")
+        "$OC_BIN" agent --agent "$OPENCLAW_AGENT" --local -m \
             "Read SPEC.md in ~/projects/$PROJECT_NAME and write ticket.md with implementation instructions for Kiro." \
             2>&1 | while read -r line; do log "[openclaw] $line"; done
         log "OpenClaw exited."

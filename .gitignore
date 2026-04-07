@@ -2,7 +2,9 @@
 .env
 credentials.md
 
-# Orchestrator logs
+# Logs
+watcher.log
+.last-run.log
 orchestrator/orchestrator.log
 
 # OS files

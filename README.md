@@ -1,81 +1,55 @@
 # Kiro + OpenClaw Workflow
 
-Two-agent development workflow: Kiro writes code, OpenClaw manages specs and does visual/functional QA. An orchestrator watches for phase changes and triggers the right agent automatically.
+Two-agent dev workflow. Kiro writes code, OpenClaw manages specs and does QA.
 
-## Setup (on the VM)
+## Setup
 
 ```bash
 git clone <your-repo-url> ~/workflow
 cd ~/workflow
-
-# Fill in credentials first
 cp .env.example .env
 nano .env
-
-# Then run setup
 chmod +x setup.sh
-./setup.sh my-agent
+./setup.sh my-project
 ```
 
-This reads your API key and model from `.env` and handles everything: system dependencies, Node.js, OpenClaw + config + agent creation, Kiro CLI + auth, Playwright, and git config.
+## How it works
 
-## Usage
+```
+~/projects/my-project/
+├── SPEC.md              ← Project spec (you + OpenClaw create this)
+├── ticket.md            ← Agent writes this when done (watcher archives it)
+├── done.md              ← OpenClaw creates this when project is complete
+├── archive/             ← All past tickets + worker.md (whose turn)
+├── templates/           ← Reference for spec/ticket/done format
+├── watcher.sh           ← Alternates between agents automatically
+├── .kiro/steering/      ← Kiro instructions
+└── src/                 ← Code
+```
 
-1. Run setup once: `./setup.sh my-agent`
-2. Open the OpenClaw agent: `openclaw tui --session my-agent`
-3. Give it your idea or spec
-4. OpenClaw bootstraps the project, writes the spec, and triggers Kiro automatically
-5. Kiro implements + tests → OpenClaw does QA → loop until done
-6. OpenClaw notifies you via WhatsApp when it's finished
+1. Create the spec with OpenClaw in the dashboard
+2. Start the watcher: `~/projects/my-project/watcher.sh`
+3. Watcher triggers OpenClaw → writes first ticket for Kiro
+4. Watcher triggers Kiro → builds, writes ticket for OpenClaw
+5. Watcher triggers OpenClaw → tests, writes ticket (issues) or done.md
+6. Loop until done.md → project complete
 
 ## Watcher
 
-The watcher monitors STATUS.json and triggers the right agent on phase changes. Setup starts it automatically.
-
 ```bash
-# Start watcher (opens in its own terminal if GUI available)
-~/projects/my-project/orchestrator/watcher.sh
-
-# Check if it's running
-ps aux | grep watcher.sh
-
-# Re-trigger a phase change (if watcher is already running)
-~/projects/my-project/orchestrator/update-status.sh ready-for-kiro openclaw "Retry round 1"
-~/projects/my-project/orchestrator/update-status.sh ready-for-qa kiro "Retry QA"
-
-# View live logs
-tail -f ~/projects/my-project/orchestrator/orchestrator.log
+~/projects/my-project/watcher.sh          # start
+ps aux | grep watcher.sh                   # check
+tail -f ~/projects/my-project/watcher.log  # logs
 ```
 
-The watcher retries up to 3 times if an agent fails. After that it exits and logs how to restart.
+Retries 3x on failure, then exits with restart instructions.
+Saves state in `archive/worker.md` so it can resume after crash.
 
-## Structure
-
-```
-~/workflow/                       ← This repo
-├── setup.sh                      # Full setup (run this first)
-├── bootstrap.sh                  # Creates new projects from template
-├── .env.example                  # Template for .env (credentials)
-├── TOOLS.md                      # All tools reference (WhatsApp, Whisper, TTS, Playwright, etc.)
-├── openclaw/soul.md              # OpenClaw agent instructions
-├── .kiro/steering/               # Kiro steering rules
-└── workflow-template/            # Blueprint copied per project
-    ├── orchestrator/             # Watcher + status update scripts
-    └── specs/                    # Templates, workflow docs
-
-~/projects/                       ← Created projects
-└── my-project/
-    ├── .kiro/steering/           # Kiro instructions (copied from template)
-    ├── orchestrator/             # Watcher + status scripts
-    ├── specs/                    # Specs, QA reports, handoffs, templates
-    └── src/                      # Code goes here
-```
-
-## Key Files
+## Files
 
 | File | Purpose |
 |------|---------|
-| `TOOLS.md` | All tools: WhatsApp, Whisper, TTS, Playwright, Computer Use, config |
-| `openclaw/soul.md` | OpenClaw's full instructions (PM + QA role) |
-| `.kiro/steering/agent-workflow.md` | Kiro's instructions (developer role) |
-| `.env.example` | Template for secrets (copy to `.env`) |
+| `soul.md` | OpenClaw instructions (copied to agent workspace) |
+| `TOOLS.md` | Tools reference for all agents |
+| `copy/` | Project template (copied per project) |
+| `.env.example` | Credentials template |

@@ -41,6 +41,7 @@ You are the developer. You build features, write production-ready code, comprehe
 - `SPEC.md` — the project spec (read on first round)
 - `ticket.md` — your output. Write what you did and how to test it.
 - `templates/ticket.md` — format reference
+- If the ticket you receive is incomplete or auto-generated, check `watcher.log` and `.last-run.log` in the project root for context on what happened in previous rounds.
 
 ## Your workflow
 1. The ticket content is in your message — read it

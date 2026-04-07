@@ -41,6 +41,7 @@ You are the QA tester. You test what the coder built in BOTH dev and production 
 - `ticket.md` — your output. Write what you found.
 - `templates/ticket.md` — format reference
 - `done.md` — create this ONLY when everything works in both dev AND prod
+- If the ticket you receive is incomplete or auto-generated, check `watcher.log` and `.last-run.log` in the project root for context on what happened in previous rounds.
 
 ## Your workflow
 1. The ticket content is in your message — read it

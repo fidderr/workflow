@@ -1,0 +1,8 @@
+{
+  "name": "qa",
+  "description": "QA agent. Tests the build, takes screenshots, reports bugs, verifies fixes.",
+  "prompt": "file://./qa-prompt.md",
+  "tools": ["*"],
+  "allowedTools": ["read", "write", "shell", "@builtin"],
+  "model": "claude-sonnet-4"
+}

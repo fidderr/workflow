@@ -1,0 +1,8 @@
+{
+  "name": "coder",
+  "description": "Developer agent. Builds features, writes code and tests, fixes bugs.",
+  "prompt": "file://./coder-prompt.md",
+  "tools": ["*"],
+  "allowedTools": ["read", "write", "shell", "@builtin"],
+  "model": "claude-sonnet-4"
+}

@@ -1,14 +1,12 @@
-# Kiro + OpenClaw Workflow
+# Kiro Workflow
 
-Two-agent dev workflow. Kiro writes code, OpenClaw manages specs and does QA.
+Two Kiro agents build your project: one codes, one tests. A watcher alternates between them automatically.
 
 ## Setup
 
 ```bash
 git clone <your-repo-url> ~/workflow
 cd ~/workflow
-cp .env.example .env
-nano .env
 chmod +x setup.sh
 ./setup.sh my-project
 ```
@@ -17,39 +15,40 @@ chmod +x setup.sh
 
 ```
 ~/projects/my-project/
-├── SPEC.md              ← Project spec (you + OpenClaw create this)
-├── ticket.md            ← Agent writes this when done (watcher archives it)
-├── done.md              ← OpenClaw creates this when project is complete
-├── archive/             ← All past tickets + worker.md (whose turn)
-├── templates/           ← Reference for spec/ticket/done format
-├── watcher.sh           ← Alternates between agents automatically
-├── .kiro/steering/      ← Kiro instructions
-└── src/                 ← Code
+├── SPEC.md              ← You write this (what to build)
+├── ticket.md            ← Agents write this (what was done / what to fix)
+├── done.md              ← QA creates this when project is complete
+├── archive/             ← All past tickets
+├── templates/           ← Format reference for spec/ticket/done
+├── watcher.sh           ← Alternates coder ↔ qa automatically
+├── kill-watcher.sh      ← Stops the watcher
+├── .kiro/agents/        ← Agent configs (coder.json, qa.json)
+└── src/                 ← Code goes here
 ```
 
-1. Create the spec with OpenClaw in the dashboard
-2. Start the watcher: `~/projects/my-project/watcher.sh`
-3. Watcher triggers OpenClaw → writes first ticket for Kiro
-4. Watcher triggers Kiro → builds, writes ticket for OpenClaw
-5. Watcher triggers OpenClaw → tests, writes ticket (issues) or done.md
-6. Loop until done.md → project complete
+1. Write `SPEC.md` with what you want built
+2. Start the watcher: `./watcher.sh`
+3. Coder builds everything, writes ticket
+4. QA tests everything, writes ticket with bugs or creates done.md
+5. Loop until done.md exists
 
 ## Watcher
 
 ```bash
 ~/projects/my-project/watcher.sh          # start
-ps aux | grep watcher.sh                   # check
-tail -f ~/projects/my-project/watcher.log  # logs
+~/projects/my-project/kill-watcher.sh     # stop
+tail -f ~/projects/my-project/watcher.log # logs
 ```
 
 Retries 3x on failure, then exits with restart instructions.
-Saves state in `archive/worker.md` so it can resume after crash.
 
-## Files
+## Agents
 
-| File | Purpose |
-|------|---------|
-| `soul.md` | OpenClaw instructions (copied to agent workspace) |
-| `TOOLS.md` | Tools reference for all agents |
-| `copy/` | Project template (copied per project) |
-| `.env.example` | Credentials template |
+| Agent | Role | Usage |
+|-------|------|-------|
+| coder | Writes code, writes ALL tests (unit, integration, smoke, validation, API), fixes bugs | Automated via watcher |
+| qa | Runs all tests, does manual testing, takes screenshots, reports bugs, creates done.md | Automated via watcher |
+| spec-writer | Creates thorough implementation-ready specs from your ideas | Interactive: `kiro-cli --agent spec-writer` |
+
+Both coder and qa use `--no-interactive --trust-all-tools` in the watcher.
+Use spec-writer interactively to create your SPEC.md before starting the watcher.

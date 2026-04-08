@@ -1,7 +1,7 @@
 {
-  "name": "coder",
-  "description": "Developer agent. Builds features, writes code with basic tests, fixes bugs.",
-  "prompt": "file://./coder-prompt.md",
+  "name": "functional-qa",
+  "description": "Functional QA agent. Tests user flows, UX, and product quality.",
+  "prompt": "file://./functional-qa-prompt.md",
   "tools": ["*"],
   "allowedTools": ["read", "write", "shell", "@builtin"],
   "toolsSettings": {

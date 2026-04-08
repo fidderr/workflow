@@ -1,9 +1,8 @@
 #!/bin/bash
 # ============================================================
-# Setup — installs Kiro CLI, creates project
+# Setup v2 — installs Kiro CLI, creates project from v2 template
 # ============================================================
 # Usage:
-#   cp .env.example .env && nano .env
 #   ./setup.sh my-project
 # ============================================================
 
@@ -20,7 +19,7 @@ fi
 PROJECT_ROOT="$HOME/projects/$PROJECT_NAME"
 
 echo "============================================"
-echo "  Setup: $PROJECT_NAME"
+echo "  Setup v2: $PROJECT_NAME"
 echo "============================================"
 echo ""
 
@@ -52,8 +51,15 @@ echo ""
 echo "[3/3] Creating project '$PROJECT_NAME'..."
 if [ ! -d "$PROJECT_ROOT" ]; then
     mkdir -p "$HOME/projects"
-    cp -r "$WORKFLOW_DIR/copy" "$PROJECT_ROOT"
-    mkdir -p "$PROJECT_ROOT/src"
+    # Copy from template directory
+    mkdir -p "$PROJECT_ROOT"
+    cp -r "$WORKFLOW_DIR/copy/.kiro" "$PROJECT_ROOT/"
+    cp -r "$WORKFLOW_DIR/copy/archive" "$PROJECT_ROOT/"
+    cp -r "$WORKFLOW_DIR/copy/templates" "$PROJECT_ROOT/"
+    cp -r "$WORKFLOW_DIR/copy/reports" "$PROJECT_ROOT/"
+    cp -r "$WORKFLOW_DIR/copy/src" "$PROJECT_ROOT/"
+    cp "$WORKFLOW_DIR/copy/watcher.sh" "$PROJECT_ROOT/"
+    cp "$WORKFLOW_DIR/copy/kill-watcher.sh" "$PROJECT_ROOT/"
     chmod +x "$PROJECT_ROOT/watcher.sh" "$PROJECT_ROOT/kill-watcher.sh"
     echo "  Created: $PROJECT_ROOT"
 else
@@ -67,8 +73,13 @@ echo "============================================"
 echo ""
 echo "  Project: $PROJECT_ROOT"
 echo ""
+echo "  Pipeline: coder → code-verifier → backend-tester"
+echo "            → frontend-tester → visual-qa → functional-qa"
+echo "            → project-lead"
+echo ""
 echo "  Next steps:"
 echo "    1. Write SPEC.md in $PROJECT_ROOT"
-echo "    2. Start the watcher: $PROJECT_ROOT/watcher.sh"
+echo "       (or use: kiro-cli --agent spec-writer)"
+echo "    2. Start: $PROJECT_ROOT/watcher.sh"
 echo "    3. Watch it build."
 echo ""

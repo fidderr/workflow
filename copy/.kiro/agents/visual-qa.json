@@ -1,7 +1,7 @@
 {
-  "name": "qa",
-  "description": "QA agent. Tests the build, takes screenshots, reports bugs, verifies fixes.",
-  "prompt": "file://./qa-prompt.md",
+  "name": "visual-qa",
+  "description": "Visual QA agent. Screenshots every page and verifies UI renders correctly.",
+  "prompt": "file://./visual-qa-prompt.md",
   "tools": ["*"],
   "allowedTools": ["read", "write", "shell", "@builtin"],
   "toolsSettings": {

@@ -1,0 +1,8 @@
+{
+  "name": "project-lead",
+  "description": "Project lead. Reviews all reports, writes tickets for the coder, or creates done.md.",
+  "prompt": "file://./project-lead-prompt.md",
+  "tools": ["*"],
+  "allowedTools": ["read", "write", "@builtin"],
+  "model": "claude-sonnet-4"
+}

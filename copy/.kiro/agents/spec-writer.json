@@ -1,6 +1,6 @@
 {
   "name": "spec-writer",
-  "description": "Creates thorough, implementation-ready project specs. Use interactively to turn ideas into detailed SPEC.md files.",
+  "description": "Creates thorough, implementation-ready project specs. Use interactively.",
   "prompt": "file://./spec-writer-prompt.md",
   "tools": ["read", "write", "shell"],
   "allowedTools": ["read", "write"],

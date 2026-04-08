@@ -1,7 +1,7 @@
 {
-  "name": "coder",
-  "description": "Developer agent. Builds features, writes code with basic tests, fixes bugs.",
-  "prompt": "file://./coder-prompt.md",
+  "name": "code-verifier",
+  "description": "Code verifier agent. Reviews codebase for quality and spec completeness, fixes issues.",
+  "prompt": "file://./code-verifier-prompt.md",
   "tools": ["*"],
   "allowedTools": ["read", "write", "shell", "@builtin"],
   "toolsSettings": {

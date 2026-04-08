@@ -1,7 +1,7 @@
 {
-  "name": "coder",
-  "description": "Developer agent. Builds features, writes code with basic tests, fixes bugs.",
-  "prompt": "file://./coder-prompt.md",
+  "name": "frontend-tester",
+  "description": "Frontend test agent. Creates and runs client-side tests.",
+  "prompt": "file://./frontend-tester-prompt.md",
   "tools": ["*"],
   "allowedTools": ["read", "write", "shell", "@builtin"],
   "toolsSettings": {
@@ -16,9 +16,6 @@
         "python.*manage.py runserver.*",
         "vite$",
         "Xvfb.*",
-        "make:filament-user.*",
-        "make:filament-resource.*",
-        "make:filament.*",
         "pkill -f.*"
       ]
     }

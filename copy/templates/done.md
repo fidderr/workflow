@@ -3,11 +3,28 @@
 ## Summary
 [What was built]
 
-## How to run
+## Dev Setup
 ```bash
 [commands]
 ```
 
-## Total rounds: [X]
+## Production Setup
+```bash
+[commands]
+```
+
+## Running Tests
+```bash
+[commands]
+```
+
+## Environment Variables
+[List with descriptions]
+
+## Test Results
+[Summary from all reports]
+
+## Total Rounds: [X]
+
 ## Notes
 [Anything the admin should know]

@@ -19,4 +19,4 @@
 - [ ] All "Must" requirements implemented
 - [ ] Tests written and passing
 - [ ] No errors on startup
-- [ ] QA pass with zero blockers
+- [ ] All QA phases pass with zero blockers

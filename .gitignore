@@ -7,6 +7,9 @@ watcher.log
 .last-run.log
 orchestrator/orchestrator.log
 
+# Runtime files
+.watcher.pid
+
 # OS files
 .DS_Store
 Thumbs.db

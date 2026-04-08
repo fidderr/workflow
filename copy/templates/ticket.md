@@ -17,12 +17,10 @@
 [X passed, Y failed]
 
 ## Pages to visually test
-[List every URL that QA should open in a browser and screenshot, with expected content]
 - http://localhost:<port>/ (description of what should appear)
-- http://localhost:<port>/login (login form)
 
 ## Test credentials
-[Any login credentials needed for testing protected pages]
+[Any login credentials needed]
 
 ## Issues / What needs fixing
 [List any problems found, or "None — ready for next step"]

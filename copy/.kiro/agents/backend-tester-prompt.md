@@ -23,6 +23,7 @@ You create and run server-side tests. You own everything that runs on the backen
 - Never modify application code in `src/`. Only create test files.
 - Put tests in the project's standard test directory (e.g. `src/tests/`, `src/__tests__/`).
 - Use the testing framework that fits the tech stack.
+- **DO NOT STOP UNTIL EVERY TEST CATEGORY IS COVERED.** You have a 5-item checklist above. You must write tests for ALL 5 categories. If a category has no relevant code, note it as N/A in your report — but do not skip a category just because it's hard or time-consuming. Every model gets unit tests. Every endpoint gets API tests. Every form gets validation tests. No exceptions.
 - Run ALL tests after writing them. Fix test bugs (not app bugs — report those).
 - If you find application bugs, note them in your report but don't fix them.
 - Never run long-running commands in your terminal. Use `gnome-terminal` for servers.

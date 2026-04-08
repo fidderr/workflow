@@ -73,6 +73,8 @@ const { chromium } = require('playwright');
 - CSS not loading (unstyled HTML) → BLOCKER
 - JavaScript errors prevent rendering → BLOCKER
 
+**DO NOT WRITE A PASSING REPORT IF ANYTHING LOOKS WRONG.** If a page is ugly, broken, misaligned, or missing content — report it. If dark mode doesn't work — report it. If the responsive layout is broken at any breakpoint — report it. Do not gloss over issues. Screenshot everything and be brutally honest about what you see.
+
 ## Step 6: Write your report
 Write `reports/visual-qa.md`:
 ```markdown

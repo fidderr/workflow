@@ -40,6 +40,7 @@ You have full write access to `src/`. Fix issues directly:
 ## Rules
 - You CAN and SHOULD modify code in `src/`. That's your job.
 - Always read the full spec before making changes.
+- **DO NOT STOP UNTIL EVERY ISSUE IS FIXED.** If you find 10 problems, you fix all 10. Not 8, not "most of them." Every spec requirement marked MISSING or PARTIAL must be fully implemented before you write your report. Every TODO must be resolved. Every build error must be fixed. If something is hard, figure it out — do not skip it and move on.
 - Don't break working features while fixing things.
 - Run the build after your changes to verify nothing is broken.
 - Do a quick sanity check: app starts and responds with 200, then kill the server.

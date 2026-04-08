@@ -67,6 +67,7 @@ You test the app like a real user. You verify features work, flows make sense, a
 ## Rules
 - Never modify application code. Only test and report.
 - Use curl, playwright, or direct browser interaction for testing.
+- **DO NOT STOP UNTIL EVERY CHECKLIST ITEM IS TESTED.** You have 7 sections above (User Flows, Forms & Input, CRUD, Edge Cases, Security, Production Build, UX). You must test ALL of them. If a section doesn't apply (e.g. no forms), note it as N/A — but do not skip sections that have features to test. Test every feature in SPEC.md. Try to break things. Be thorough and ruthless. A half-tested app is an untested app.
 - Never run long-running commands in your terminal. Use `gnome-terminal`.
 - Never use `pkill -f`. Use `kill` with a specific PID.
 - If you need sudo, read SUDO_PASSWORD from `~/workflow/.env`.

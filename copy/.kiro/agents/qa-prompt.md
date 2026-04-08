@@ -60,8 +60,46 @@ Set up and test the development environment exactly as a developer would.
 - Follow the coder's "How to run" instructions exactly
 - Install dependencies
 - Run migrations and seeders
-- Start the dev server
+- Start the dev server in a separate terminal
 - Verify it starts without errors
+
+### VISUAL TESTING FIRST (before anything else)
+You MUST visually verify the UI before doing any backend testing. Open a browser or use a headless browser to actually LOOK at the pages.
+
+1. Start the dev server in gnome-terminal
+2. Take a screenshot of EVERY page:
+   ```bash
+   # Install playwright if not available
+   cd /tmp && npm init -y && npm install playwright 2>/dev/null
+   
+   # Screenshot each page
+   node -e "
+   const { chromium } = require('playwright');
+   (async () => {
+     const browser = await chromium.launch();
+     const page = await browser.newPage();
+     const pages = ['/', '/login', '/register', '/videos'];
+     for (const p of pages) {
+       await page.goto('http://localhost:8000' + p);
+       await page.screenshot({ path: '/tmp/screenshot' + p.replace(/\//g, '_') + '.png', fullPage: true });
+       console.log('Screenshot: ' + p + ' -> /tmp/screenshot' + p.replace(/\//g, '_') + '.png');
+     }
+     await browser.close();
+   })();
+   "
+   ```
+3. READ each screenshot to verify the UI actually renders:
+   - Is there actual content or just a blank/white page?
+   - Does the layout look correct?
+   - Are Vue components rendering or showing raw template syntax like `@routes` or `{{ }}`?
+   - Is CSS loading (styled elements vs unstyled HTML)?
+4. If the UI is blank, broken, or shows raw template code — this is a BLOCKER. Report it immediately. Don't bother with backend testing until the frontend actually works.
+
+Common frontend issues to check:
+- Blank page = Inertia.js not configured correctly, or Vite not building
+- `@routes` showing as text = Blade template not processing directives
+- No styling = Tailwind/CSS not compiling
+- Vue components not rendering = JavaScript errors, check browser console
 
 ### Run Automated Tests
 - Run the FULL test suite the coder wrote
@@ -95,13 +133,15 @@ Test EVERY feature listed in SPEC.md:
 - Verify unique constraints work (try creating duplicates)
 
 ### Visual Checks
-- Take screenshots: `scrot /tmp/screen-dev.png`
-- Layout is correct, nothing overlapping or cut off
-- Text is readable
-- Responsive: check mobile (375px), tablet (768px), desktop (1920px) if applicable
-- Empty states show helpful messages (not blank screens)
-- Loading states exist where needed
-- Error states are user-friendly
+- Take screenshots of EVERY page (not just the homepage) using playwright or scrot
+- For each screenshot, verify:
+  - Page has actual rendered content (not blank, not raw template code)
+  - CSS is loaded and applied (elements are styled, not plain HTML)
+  - Vue/React components are rendering (not showing `{{ }}` or `@directives`)
+  - Layout matches what SPEC.md describes
+  - No overlapping or cut-off elements
+- Check responsive: take screenshots at 375px, 768px, and 1920px width
+- If ANY page is blank or shows raw template syntax, this is a MAJOR BUG — report it
 
 ### Security Basics
 - No sensitive data visible in page source

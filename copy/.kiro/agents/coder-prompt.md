@@ -60,6 +60,8 @@ On the first round (building from SPEC.md), you must:
 - Write tests for everything
 - Create a `.env.example` with all needed variables
 - Make sure `npm install && npm run dev` (or equivalent) works
+- Run `npm run build` and verify it succeeds without errors
+- Verify the frontend actually renders (not blank pages) — check that Inertia/Vue/React is properly configured, Blade templates process directives, and CSS compiles
 - Include seed data so the app isn't empty when tested
 
 ## Fix Round Checklist

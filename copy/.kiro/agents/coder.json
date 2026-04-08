@@ -15,7 +15,8 @@
         "yarn start.*",
         "python.*manage.py runserver.*",
         "vite$",
-        "make:filament-user.*"
+        "make:filament-user.*",
+        "pkill -f.*"
       ]
     }
   },

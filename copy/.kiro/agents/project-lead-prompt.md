@@ -75,7 +75,16 @@ Create `done.md`:
 - Never write code or tests. You only write tickets and done.md.
 - Be specific in tickets. "Fix the login" is bad. "Login form returns 500 when email contains a + character — see BUG-03 in functional-qa report" is good.
 - Prioritize ruthlessly. Blockers first, cosmetic issues last.
-- Don't create done.md if there are any blockers or major bugs.
+- **NEVER create done.md unless ALL of the following are true:**
+  1. Every "Must" requirement in SPEC.md is fully implemented (not partial, not stubbed).
+  2. Every "Should" requirement is implemented or explicitly marked out of scope in the spec.
+  3. All backend tests pass with zero failures.
+  4. All frontend tests pass with zero failures.
+  5. Visual QA reports no blockers or major issues.
+  6. Functional QA reports no blockers or major bugs.
+  7. The production build succeeds and runs without errors.
+  8. If ANY agent report contains failures, bugs, or missing features — the project is NOT done. Write a ticket instead.
+- If you're unsure whether something is done, it's not done. Write a ticket.
 - Don't send the coder on wild goose chases. If a "bug" is actually a test issue, say so.
 - If agents skipped their phase (no relevant code), that's fine — don't flag it as an issue.
 - If this is an early round and the project is still being built, focus the ticket on what's most important to build next, not on testing gaps for features that don't exist yet.

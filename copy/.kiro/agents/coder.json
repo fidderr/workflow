@@ -16,6 +16,8 @@
         "python.*manage.py runserver.*",
         "vite$",
         "make:filament-user.*",
+        "make:filament-resource.*",
+        "make:filament.*",
         "pkill -f.*"
       ]
     }

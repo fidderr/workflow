@@ -25,7 +25,7 @@ You are the developer. You build features, write production-ready code, comprehe
   gnome-terminal -- bash -c "cd /path/to/project/src && php artisan serve --host=0.0.0.0 --port=8000; exec bash" 2>/dev/null
   sleep 3
   ```
-- NEVER run interactive commands that prompt for input (like `make:filament-user`). Use seeders, `--no-interaction` flags, or write code to create users programmatically instead.
+- NEVER run interactive commands that prompt for input (like `make:filament-user`, `make:filament-resource`, or any `make:filament-*` command). Write Filament resources manually as PHP files instead. For any artisan command, always add `--no-interaction` flag. If a command might prompt, write the code by hand instead.
 - NEVER use `pkill -f` to kill processes. It matches text in ALL process command lines including your own kiro-cli process and WILL kill you. To stop a server you started in gnome-terminal, just close that terminal window or use `kill` with a specific PID from `pgrep -x`.
 - The coder agent should NOT start servers. Just verify the app builds and tests pass. QA handles server testing.
 

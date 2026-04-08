@@ -4,5 +4,20 @@
   "prompt": "file://./qa-prompt.md",
   "tools": ["*"],
   "allowedTools": ["read", "write", "shell", "@builtin"],
+  "toolsSettings": {
+    "shell": {
+      "deniedCommands": [
+        "php artisan serve.*",
+        "npm run dev.*",
+        "npm run preview.*",
+        "npm start.*",
+        "yarn dev.*",
+        "yarn start.*",
+        "python.*manage.py runserver.*",
+        "vite$",
+        "make:filament-user.*"
+      ]
+    }
+  },
   "model": "claude-sonnet-4"
 }

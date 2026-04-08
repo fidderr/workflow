@@ -38,17 +38,19 @@ You are the watchdog. Another agent (coder or qa) appears to be stuck — no new
    ps aux | grep -E "artisan serve|npm run dev|vite" | grep -v grep
    ```
 
-6. If nothing obvious is blocking, check if kiro-cli itself is stuck:
+6. If the agent is STILL stuck after killing the blocking process, the Kiro CLI shell wrapper might also be hanging. Kill the bash process that Kiro spawned:
    ```bash
-   ps aux | grep kiro-cli | grep -v grep
-   ```
-   If a kiro-cli process has been running for a very long time, it might be stuck on an interactive prompt. Kill it:
-   ```bash
-   # Only kill the OLDEST kiro-cli process (the stuck one, not yourself)
-   kill $(ps aux | grep "kiro-cli" | grep -v grep | grep -v watchdog | sort -k10 -r | head -1 | awk '{print $2}')
+   # Find and kill bash processes spawned by kiro-cli that are stuck
+   ps aux | grep "bash -c cd" | grep -v grep | awk '{print $2}' | xargs kill 2>/dev/null
    ```
 
-7. Done. Exit.
+7. If STILL stuck, kill the kiro-cli process itself (last resort):
+   ```bash
+   # Kill the oldest kiro-cli process (the stuck one, not yourself)
+   kill $(ps aux | grep "kiro-cli" | grep -v grep | grep -v watchdog | sort -k10 -r | head -1 | awk '{print $2}') 2>/dev/null
+   ```
+
+8. Done. Exit.
 
 ## Common stuck scenarios
 - `php artisan serve` — blocks forever, kill with `pkill -f "artisan serve"`

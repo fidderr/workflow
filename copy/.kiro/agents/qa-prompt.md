@@ -70,23 +70,28 @@ sleep 5
 # Install chromium if not available
 which chromium-browser || which chromium || sudo apt-get install -y chromium-browser 2>/dev/null
 
-# Open browser in fullscreen
-DISPLAY=:99 chromium-browser --no-sandbox --start-fullscreen http://localhost:<port-from-ticket> &
+# First check what display is available
+echo $DISPLAY
+
+# Open browser in fullscreen (use the DISPLAY from above, typically :10.0)
+gnome-terminal -- bash -c "chromium-browser --no-sandbox --start-fullscreen http://localhost:<port-from-ticket>; exec bash" 2>/dev/null
 sleep 5
 
-# Screenshot the first page
-DISPLAY=:99 scrot /tmp/ui-homepage.png
+# Screenshot the first page (use same DISPLAY)
+DISPLAY=:10.0 scrot /tmp/ui-homepage.png
 ```
+
+NEVER start Xvfb — the VM already has a display running. Use `DISPLAY=:10.0` for all screenshot commands. If that doesn't work, check `echo $DISPLAY` first.
 
 ### Step 3: Screenshot EVERY page listed in SPEC.md
 Navigate to each page, wait for it to load, and screenshot:
 ```bash
-DISPLAY=:99 xdotool key ctrl+l
+DISPLAY=:10.0 xdotool key ctrl+l
 sleep 0.5
-DISPLAY=:99 xdotool type "http://localhost:<port>/some-page"
-DISPLAY=:99 xdotool key Return
+DISPLAY=:10.0 xdotool type "http://localhost:<port>/some-page"
+DISPLAY=:10.0 xdotool key Return
 sleep 3
-DISPLAY=:99 scrot /tmp/ui-some-page.png
+DISPLAY=:10.0 scrot /tmp/ui-some-page.png
 ```
 
 Do this for EVERY page in SPEC.md — no exceptions.

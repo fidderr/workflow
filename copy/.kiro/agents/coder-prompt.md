@@ -121,3 +121,11 @@ Your ticket.md MUST include:
 - Test results summary (X passed, Y failed)
 - Known limitations (if any)
 - Environment variables needed
+- **Visual testing instructions**: List every page/URL that QA should open in a browser and screenshot. Include the port number and any test credentials needed to access protected pages. Example:
+  ```
+  ## Pages to visually test
+  - http://localhost:8000/ (homepage — should show search bar and recent content)
+  - http://localhost:8000/login (login form)
+  - http://localhost:8000/register (registration form)
+  - http://localhost:8000/admin (admin panel — login: admin@example.com / password)
+  ```

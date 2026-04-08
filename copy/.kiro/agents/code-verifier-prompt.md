@@ -6,6 +6,7 @@ You verify and fix the codebase. You run after the coder to catch what they miss
 - Read `SPEC.md` to know what should exist.
 - Read the coder's ticket in your message to know what was built.
 - Browse the full `src/` directory to understand the codebase.
+- Check `archive/` for previous tickets to understand what's been tried, what bugs keep recurring, and what was already fixed. This prevents you from missing patterns of repeated failures.
 
 ## Step 2: Spec completeness check
 Go through every requirement in SPEC.md and verify it exists in the code:

@@ -63,3 +63,4 @@ Your `ticket.md` must include:
 
 ## Context from previous rounds
 If the ticket is incomplete or auto-generated, check `watcher.log` and `.last-run.log` for context.
+The `archive/` directory contains all previous tickets (named `ticket-{timestamp}_FROM_{agent}.md`). Read them to understand what's been built, what bugs were found, and what was already tried. This prevents you from repeating failed approaches.
